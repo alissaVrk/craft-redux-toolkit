@@ -2,7 +2,9 @@
   "name": "craft-redux-toolkit",
   "version": "0.1.0",
   "private": true,
+  "proxy": "https://app-pp3.craft.io",
   "dependencies": {
+    "@headlessui/react": "^1.4.3",
     "@reduxjs/toolkit": "^1.5.1",
     "axios": "^0.25.0",
     "lodash": "^4.17.21",
@@ -35,15 +37,15 @@
     ]
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.178",
-    "@types/uuid": "^8.3.4",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "@types/jest": "^24.0.0",
+    "@types/lodash": "^4.14.178",
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
-    "@types/react-redux": "^7.1.7"
+    "@types/react-redux": "^7.1.7",
+    "@types/uuid": "^8.3.4"
   }
 }

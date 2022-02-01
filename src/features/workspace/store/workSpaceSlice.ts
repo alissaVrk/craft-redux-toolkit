@@ -1,6 +1,6 @@
 import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 import { defer } from "lodash";
-import { SubscribeToChange, ThunkConfig, getAxionDefaultConfig } from "redux-root";
+import { SubscribeToChange, ThunkConfig, getAxionDefaultConfig, RootState } from "redux-root";
 import { subscribeToUserChanged } from "features/auth"
 import { fetchAll } from "./workspaceBE";
 import { Workspace } from "./types";
@@ -32,18 +32,15 @@ export const workSpaceSlice = createSlice({
     }
 })
 
-export function initSlice({subscribeToStoreChange}: {subscribeToStoreChange: SubscribeToChange}){
-    subscribeToUserChanged(
-        subscribeToStoreChange, 
-        (state, dispatch) => {
-            if (!state.token) {
-                return;
-            }
-            defer(() => {
-                dispatch(fetchWorkSpaces())
-            });
+export const selectors = workspacesAdapter.getSelectors<RootState>((state) => state.workspaces);
+
+export function initSlice({ subscribeToStoreChange }: { subscribeToStoreChange: SubscribeToChange }) {
+    subscribeToUserChanged(subscribeToStoreChange, (state, dispatch) => {
+        if (!state.token) {
+            return;
         }
-    );
+        defer(() => dispatch(fetchWorkSpaces()));
+    });
     return {
         reducer: workSpaceSlice.reducer,
         name: workSpaceSlice.name

@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import counterReducer from '../features/counter/counterSlice';
 import {initSlice as initAuth} from "features/auth";
-import {initSlice as initWs} from "features/workspace";
+import {initSlice as initWs} from "features/workspace/store";
 import { createSubsriber } from './storeSubscribe';
 
 export function createStore(){

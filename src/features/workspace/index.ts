@@ -1,1 +1,2 @@
-export { initSlice } from "./workSpaceSlice"
+export * from "./store";
+export * from "./ui/WorkspaceSelect"

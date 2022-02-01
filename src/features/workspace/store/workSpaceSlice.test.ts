@@ -1,10 +1,9 @@
 import { createStore } from "redux-root/store";
 import {mockLogin} from "features/auth/authTestUtils"
 import {actions} from "features/auth";
-import { mockFetchAll } from "./workspaceTestUtils";
+import { mockFetchAll } from "../workspaceTestUtils";
 import { delay } from "lodash";
 import { StoreType } from "redux-root";
-import { Workspace } from "./types";
 import { fetchWorkSpaces } from "./workSpaceSlice";
 
 describe("workspace slice", () => {
@@ -37,6 +36,7 @@ describe("workspace slice", () => {
     });
 
     it.todo("should clear on logout");
+    it.todo("should do something if fetch fails");
 
     it("should update isFetching state", async () => {
         const store = createStore();

@@ -1,4 +1,4 @@
-import * as authBE from "./authBE"
+import * as authBE from "./store/authBE"
 
 export function mockLogin(userData: {token: string, userId: string}){
     return jest.spyOn(authBE, "loginBE").mockImplementation(() => {

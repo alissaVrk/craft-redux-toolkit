@@ -1,5 +1,2 @@
-import { login } from "./authSlice";
-export { subscribeToUserChanged, initSlice } from "./authSlice";
-export const actions = {
-    login
-}
+export * from "./store";
+export * from "./ui/Login"
