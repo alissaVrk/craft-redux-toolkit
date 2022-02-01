@@ -1,1 +1,2 @@
-export { initSlice, selectors } from "./workSpaceSlice"
+export { initSlice } from "./workSpaceSlice"
+export { selectors } from "./workspaceSelectors"

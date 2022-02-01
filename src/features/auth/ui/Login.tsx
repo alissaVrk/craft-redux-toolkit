@@ -1,9 +1,28 @@
-import { useAppDispatch } from "redux-root";
-import { actions } from "../store";
+import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "redux-root";
+import { actions, selectors } from "../store";
 
-export function Login(){
+export function Login() {
+    const [isLoading, setIsLoading] = useState(false);
     const dispatch = useAppDispatch();
-    return(
-        <button onClick={() => dispatch(actions.login())}>login</button>
-    )
+    const user = useAppSelector(selectors.selectUserInfo);
+
+    async function login() {
+        setIsLoading(true);
+        await dispatch(actions.login()).unwrap();
+        setIsLoading(false);
+    }
+
+    if (isLoading) {
+        return (<h6>Loading....</h6>)
+    }
+    if (!user.id) {
+        return (
+            <button onClick={login}>login</button>
+        )
+    }
+
+
+    return (<h6>Hello {user.email}</h6>)
+    
 }

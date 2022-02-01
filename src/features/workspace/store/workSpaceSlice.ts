@@ -10,7 +10,7 @@ export const fetchWorkSpaces = createAsyncThunk<Array<Workspace>, void, ThunkCon
     return fetchAll(config);
 });
 
-const workspacesAdapter = createEntityAdapter<Workspace>();
+export const workspacesAdapter = createEntityAdapter<Workspace>();
 
 export const workSpaceSlice = createSlice({
     name: "workspaces",
@@ -32,7 +32,10 @@ export const workSpaceSlice = createSlice({
     }
 })
 
-export const selectors = workspacesAdapter.getSelectors<RootState>((state) => state.workspaces);
+export const selectors = {
+    ...workspacesAdapter.getSelectors<RootState>((state) => state.workspaces),
+    selectIsFetching: (state: RootState) => state.workspaces.isFetching
+}
 
 export function initSlice({ subscribeToStoreChange }: { subscribeToStoreChange: SubscribeToChange }) {
     subscribeToUserChanged(subscribeToStoreChange, (state, dispatch) => {
