@@ -1,48 +1,54 @@
-import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/toolkit";
+import { createEntityAdapter, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { defer } from "lodash";
-import { SubscribeToChange, ThunkConfig, getAxionDefaultConfig, RootState } from "redux-root";
+import { SubscribeToChange } from "redux-root";
 import { subscribeToUserChanged } from "features/auth"
-import { fetchAll } from "./workspaceBE";
 import { Workspace } from "./types";
-
-export const fetchWorkSpaces = createAsyncThunk<Array<Workspace>, void, ThunkConfig>("workspaces", (state, thunkAPI) => {
-    const config = getAxionDefaultConfig(thunkAPI.getState())
-    return fetchAll(config);
-});
+import { getSelectedWorkspaceAsync, getWorkspacesAsync } from "./workspaceThunks";
 
 export const workspacesAdapter = createEntityAdapter<Workspace>();
 
 export const workSpaceSlice = createSlice({
     name: "workspaces",
     initialState: workspacesAdapter.getInitialState({
-        isFetching: false
+        isItemsFetching: false,
+        isSelectedFetching: false,
+        selectedWorkspace: null as null | string
     }),
-    reducers: {},
-    extraReducers: builder => {
-        builder.addCase(fetchWorkSpaces.fulfilled, (state, action) => {
-            workspacesAdapter.setAll(state, action.payload);
-            state.isFetching = false;
-        });
-        builder.addCase(fetchWorkSpaces.pending, (state) => {
+    reducers: {
+        selectWorkspace: (state, action: PayloadAction<Workspace>) => {
             return {
                 ...state,
-                isFetching: true
-            };
+                selectedWorkspace: action.payload.id
+            }
+        }
+    },
+    extraReducers: builder => {
+        builder.addCase(getWorkspacesAsync.fulfilled, (state, action) => {
+            workspacesAdapter.setAll(state, action.payload);
+            state.isItemsFetching = false;
         });
+        builder.addCase(getWorkspacesAsync.pending, (state) => {
+            state.isItemsFetching = true
+        });
+        builder.addCase(getSelectedWorkspaceAsync.pending, (state) => {
+            state.isSelectedFetching = true;
+        })
+        builder.addCase(getSelectedWorkspaceAsync.fulfilled, (state, action) => {
+            state.selectedWorkspace = action.payload;
+            state.isSelectedFetching = false;
+        })
     }
 })
-
-export const selectors = {
-    ...workspacesAdapter.getSelectors<RootState>((state) => state.workspaces),
-    selectIsFetching: (state: RootState) => state.workspaces.isFetching
-}
 
 export function initSlice({ subscribeToStoreChange }: { subscribeToStoreChange: SubscribeToChange }) {
     subscribeToUserChanged(subscribeToStoreChange, (state, dispatch) => {
         if (!state.token) {
             return;
         }
-        defer(() => dispatch(fetchWorkSpaces()));
+        defer(() => {
+            dispatch(getWorkspacesAsync())
+            dispatch(getSelectedWorkspaceAsync())
+        });
     });
     return {
         reducer: workSpaceSlice.reducer,
