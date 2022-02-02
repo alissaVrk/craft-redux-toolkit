@@ -1,6 +1,6 @@
 import { Login } from 'features/auth';
+import { ItemsList } from 'features/craft-items';
 import { WorkspaceSelect } from 'features/workspace';
-import React from 'react';
 import './App.css';
 
 function App() {
@@ -8,6 +8,7 @@ function App() {
     <div className="App">
       <Login />
       <WorkspaceSelect />
+      <ItemsList />
     </div>
   );
 }

@@ -2,26 +2,11 @@ import { createStore } from "redux-root/store";
 import {mockLogin} from "features/auth/authTestUtils"
 import {actions} from "features/auth";
 import { mockFetchAll, mockFetchSelected } from "../workspaceTestUtils";
-import { delay } from "lodash";
-import { RootState, StoreType } from "redux-root";
 import { getSelectedWorkspaceAsync, getWorkspacesAsync } from "./workspaceThunks";
+import {waitForStateChange} from "test-utils"
 
 describe("workspace slice", () => {
-    function waitForWorkspaceItems(store: StoreType, predicate: (state: RootState["workspaces"]) => boolean){
-        return  new Promise<void>((resolve, reject) => {
-            const unsubscribe = store.subscribe(() => {
-                const ws = store.getState().workspaces
-                if(predicate(ws)) {
-                    unsubscribe();
-                    resolve();
-                }
-            });
-            delay(() => {
-                unsubscribe(),
-                reject()
-            }, 100);
-        });
-    }
+    
     describe("fetch items", () => {
         it("should fetch items after login", async () => {
             const store = createStore();
@@ -30,7 +15,7 @@ describe("workspace slice", () => {
             expect(store.getState().workspaces.ids.length).toBe(0);
     
             await store.dispatch(actions.login()).unwrap();
-            await waitForWorkspaceItems(store, ws => ws.ids.length > 0);
+            await waitForStateChange(store, state => state.workspaces, ws => ws.ids.length > 0);
     
             expect(fetchSpy).toHaveBeenCalledTimes(1);
             expect(store.getState().workspaces.ids.length).toBe(1);
@@ -63,7 +48,7 @@ describe("workspace slice", () => {
             expect(store.getState().workspaces.selectedWorkspace).toBe(null);
     
             await store.dispatch(actions.login()).unwrap();
-            await waitForWorkspaceItems(store, ws => ws.selectedWorkspace !== null);
+            await waitForStateChange(store, state => state.workspaces, ws => ws.selectedWorkspace !== null);
     
             expect(selectedSpy).toHaveBeenCalledTimes(1);
             expect(store.getState().workspaces.selectedWorkspace).toBe("ppp");

@@ -19,7 +19,7 @@ export function WorkspaceSelect() {
     }
     return (
         <Listbox value={selectedWorkspace} onChange={selectItem} as="div" style={{ width: 300 }}>
-            <Listbox.Button style={{ width: "100%" }}>{selectedWorkspace || "select"}</Listbox.Button>
+            <Listbox.Button style={{ width: "100%" }}>{selectedWorkspace?.name || "select"}</Listbox.Button>
             <Listbox.Options>
                 {items.map(ws => (
                     <Listbox.Option key={ws.id} value={ws}>

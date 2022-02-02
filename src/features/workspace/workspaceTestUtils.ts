@@ -9,7 +9,7 @@ export function mockFetchAll(items?: Workspace[]) {
 
 export function mockFetchSelected(productId?: string) {
     return jest.spyOn(wsBE, "fetchSelectedWorkspace").mockImplementation(() =>
-        Promise.resolve(productId || "selectedWorkspaceId")
+        Promise.resolve(productId || "w1")
     );
 }
 

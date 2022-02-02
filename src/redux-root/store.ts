@@ -2,19 +2,22 @@ import { configureStore } from '@reduxjs/toolkit';
 import counterReducer from '../features/counter/counterSlice';
 import {initSlice as initAuth} from "features/auth";
 import {initSlice as initWs} from "features/workspace/store";
+import {initSlice as initItems} from "features/craft-items";
 import { createSubsriber } from './storeSubscribe';
 
 export function createStore(){
   const {subscribe, subscribeToChange} = createSubsriber();
-
-  const auth = initAuth({subscribeToStoreChange: subscribeToChange});
-  const ws = initWs({subscribeToStoreChange: subscribeToChange});
+  const subscribeArg = {subscribeToStoreChange: subscribeToChange} 
+  const auth = initAuth(subscribeArg);
+  const ws = initWs(subscribeArg);
+  const items = initItems(subscribeArg);
 
   const store = configureStore({
     reducer: {
       counter: counterReducer,
       [auth.name]: auth.reducer,
-      [ws.name]: ws.reducer
+      [ws.name]: ws.reducer,
+      [items.name]: items.reducer
     },
   });
 

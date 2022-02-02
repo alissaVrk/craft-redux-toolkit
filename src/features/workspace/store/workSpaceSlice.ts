@@ -1,6 +1,6 @@
 import { createEntityAdapter, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { defer } from "lodash";
-import { SubscribeToChange } from "redux-root";
+import { StoreChangeListener, SubscribeToChange } from "redux-root";
 import { subscribeToUserChanged } from "features/auth"
 import { Workspace } from "./types";
 import { getSelectedWorkspaceAsync, getWorkspacesAsync } from "./workspaceThunks";
@@ -54,4 +54,8 @@ export function initSlice({ subscribeToStoreChange }: { subscribeToStoreChange: 
         reducer: workSpaceSlice.reducer,
         name: workSpaceSlice.name
     }
+}
+
+export function subscribeToWorkspaceChanged(subscribeToStoreChange: SubscribeToChange, listener: StoreChangeListener<string>) {
+    subscribeToStoreChange("workspaces.selectedWorkspace", listener);
 }
