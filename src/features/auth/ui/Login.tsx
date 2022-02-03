@@ -1,4 +1,5 @@
-import { useState } from "react";
+import React from "react";
+import { useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "redux-root";
 import { actions, selectors } from "../store";
 
@@ -7,9 +8,15 @@ export function Login() {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.selectUserInfo);
 
-    async function login() {
+    async function login(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+        //@ts-ignore
+        const email = event.target[0].value;
+        //@ts-ignore
+        const pass = event.target[1].value;
+        console.log(email, pass);
         setIsLoading(true);
-        await dispatch(actions.login()).unwrap();
+        await dispatch(actions.login({email, pass})).unwrap();
         setIsLoading(false);
     }
 
@@ -18,7 +25,15 @@ export function Login() {
     }
     if (!user.id) {
         return (
-            <button onClick={login}>login</button>
+            <form onSubmit={login}>
+                <label>
+                    email: <input type="text" name="email"/>
+                </label>
+                <label>
+                    password: <input type="text" name="pass"/>
+                </label>
+                <input type="submit" value="login"/>
+            </form>
         )
     }
 

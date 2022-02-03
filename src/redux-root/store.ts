@@ -5,8 +5,9 @@ import {initSlice as initWs} from "features/workspace/store";
 import {initSlice as initItems} from "features/craft-items";
 import { createSubsriber } from './storeSubscribe';
 
-export function createStore(){
+export function createStore(initialState?: any){
   const {subscribe, subscribeToChange} = createSubsriber();
+
   const subscribeArg = {subscribeToStoreChange: subscribeToChange} 
   const auth = initAuth(subscribeArg);
   const ws = initWs(subscribeArg);
@@ -19,6 +20,7 @@ export function createStore(){
       [ws.name]: ws.reducer,
       [items.name]: items.reducer
     },
+    preloadedState: initialState
   });
 
   subscribe(store);

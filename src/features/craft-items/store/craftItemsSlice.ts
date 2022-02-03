@@ -1,22 +1,22 @@
 import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
-import { defer } from "lodash";
-import { RootState, SubscribeToChange } from "redux-root";
-import { subscribeToWorkspaceChanged } from "features/workspace"
+import { RootState } from "redux-root";
 import { CraftItem } from "./types";
-import { getAllItemsAsync } from "./craftItemsThunks"
+import { getAllItemsAsync } from "./craftItemsInit"
 
-export const workspacesAdapter = createEntityAdapter<CraftItem>();
+export const craftItemsAdapter = createEntityAdapter<CraftItem>();
 
-export const workSpaceSlice = createSlice({
+export const craftItemsSlice = createSlice({
     name: "items",
-    initialState: workspacesAdapter.getInitialState({
+    initialState: craftItemsAdapter.getInitialState({
         isFetching: false,
         selectedWorkspace: null as null | string
     }),
-    reducers: {},
+    reducers: {
+        updateItem: craftItemsAdapter.updateOne
+    },
     extraReducers: builder => {
         builder.addCase(getAllItemsAsync.fulfilled, (state, action) => {
-            workspacesAdapter.setAll(state, action.payload);
+            craftItemsAdapter.setAll(state, action.payload);
             state.isFetching = false;
         });
         builder.addCase(getAllItemsAsync.pending, (state) => {
@@ -25,17 +25,4 @@ export const workSpaceSlice = createSlice({
     }
 })
 
-export const selectors = workspacesAdapter.getSelectors((state: RootState) => state.items);
-
-export function initSlice({ subscribeToStoreChange }: { subscribeToStoreChange: SubscribeToChange }) {
-    subscribeToWorkspaceChanged(subscribeToStoreChange, (state, dispatch) => {
-        if (!state) {
-            return;
-        }
-        defer(() => dispatch(getAllItemsAsync()));
-    });
-    return {
-        reducer: workSpaceSlice.reducer,
-        name: workSpaceSlice.name
-    }
-}
+export const selectors = craftItemsAdapter.getSelectors((state: RootState) => state.items);

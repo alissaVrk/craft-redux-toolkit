@@ -14,7 +14,7 @@ describe("workspace slice", () => {
             const fetchSpy = mockFetchAll();
             expect(store.getState().workspaces.ids.length).toBe(0);
     
-            await store.dispatch(actions.login()).unwrap();
+            await store.dispatch(actions.login({email: "ee", pass: "pp"})).unwrap();
             await waitForStateChange(store, state => state.workspaces, ws => ws.ids.length > 0);
     
             expect(fetchSpy).toHaveBeenCalledTimes(1);
@@ -47,7 +47,7 @@ describe("workspace slice", () => {
             const selectedSpy = mockFetchSelected("ppp");
             expect(store.getState().workspaces.selectedWorkspace).toBe(null);
     
-            await store.dispatch(actions.login()).unwrap();
+            await store.dispatch(actions.login({email: "ee", pass: "pp"})).unwrap();
             await waitForStateChange(store, state => state.workspaces, ws => ws.selectedWorkspace !== null);
     
             expect(selectedSpy).toHaveBeenCalledTimes(1);

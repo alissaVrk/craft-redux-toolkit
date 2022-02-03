@@ -1,5 +1,8 @@
-import { workSpaceSlice } from "./craftItemsSlice"
-export {initSlice, selectors} from "./craftItemsSlice";
+import { simpleUpdate } from "./craftItemsActions";
 
-export const actions = workSpaceSlice.actions;
+export {selectors} from "./craftItemsSlice";
+export { initSlice } from "./craftItemsInit"
+export const actions = {
+    simpleUpdate
+}
 export * from "./types";

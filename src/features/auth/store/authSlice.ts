@@ -14,8 +14,8 @@ type AuthState = {
     user: User
 }
 
-export const login = createAsyncThunk("login", async () => {
-    const userInfo = await loginBE(); 
+export const login = createAsyncThunk("login", async ({email, pass}: {email: string, pass: string}) => {
+    const userInfo = await loginBE(email, pass); 
     return {
         ...userInfo,
         sessioId: uuidv4()

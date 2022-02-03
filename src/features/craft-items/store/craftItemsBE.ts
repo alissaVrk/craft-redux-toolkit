@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
+import { CraftItemUpdate } from ".";
 import { CraftItem } from "./types";
 
 export async function fetchAll(selectedWSId: string, userId: string, config: AxiosRequestConfig) {
@@ -13,4 +14,8 @@ export async function fetchAll(selectedWSId: string, userId: string, config: Axi
     );
 
     return result.data.data.updated.items;
+}
+
+export async function updateItem(item: CraftItemUpdate, config: AxiosRequestConfig) {
+    const result = await axios.put<CraftItem>(`api/pages/${item.id}`, item, config);
 }

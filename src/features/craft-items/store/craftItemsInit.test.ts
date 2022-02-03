@@ -12,7 +12,7 @@ describe("fetch items", () => {
         const fetchSpy = mockFetchAll();
         expect(store.getState().items.ids.length).toBe(0);
 
-        await store.dispatch(authActions.login()).unwrap();
+        await store.dispatch(authActions.login({email: "ee", pass: "pp"})).unwrap();
         await waitForStateChange(store, state => state.items, items => items.ids.length > 0);
 
         expect(fetchSpy).toHaveBeenCalledTimes(1);
@@ -27,7 +27,7 @@ describe("fetch items", () => {
         mockFetchAll();
         expect(store.getState().items.isFetching).toBe(false);
 
-        await store.dispatch(authActions.login()).unwrap();
+        await store.dispatch(authActions.login({email: "ee", pass: "pp"})).unwrap();
         
         await waitForStateChange(store, state => state.items, items => items.isFetching);
         expect(store.getState().items.isFetching).toBe(true);

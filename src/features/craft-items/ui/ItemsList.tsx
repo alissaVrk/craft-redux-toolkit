@@ -1,14 +1,20 @@
 import { useAppSelector } from "redux-root";
-import { selectors } from "..";
+import { CraftItem, selectors } from "..";
 import { ItemView } from "./ItemView";
+import { ItemPanel } from "./itemPanel"
+import { useState } from "react";
 
 export function ItemsList() {
+    const [selectedItem, setSelectedItem] = useState<CraftItem["id"]>();
     const itemIds = useAppSelector(selectors.selectIds);
 
-    return(<ul>
-        {itemIds.map(id => (
-            <ItemView key={id} itemId={id} />
-        ))}
-    </ul>)
-    
+    return (<>
+        {selectedItem && <ItemPanel key={selectedItem} itemId={selectedItem}/> }
+        <ul>
+            {itemIds.map(id => (
+                <ItemView key={id} itemId={id as CraftItem["id"]} onSelect={setSelectedItem}/>
+            ))}
+        </ul>
+    </>)
+
 }
