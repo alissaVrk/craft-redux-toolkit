@@ -1,5 +1,4 @@
-import { workSpaceSlice } from "./workSpaceSlice"
-export { initSlice, subscribeToWorkspaceChanged } from "./workSpaceSlice"
+export { initSlice, subscribeToWorkspaceChanged } from "./workspaceSlice"
 export { selectors } from "./workspaceSelectors"
-export const actions = workSpaceSlice.actions;
+export * as actions from "./workspaceActions";
 export * from "./types";

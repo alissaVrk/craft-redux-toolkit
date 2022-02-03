@@ -1,17 +1,15 @@
 import { createStore } from "redux-root/store";
-import {mockLogin} from "features/auth/authTestUtils"
 import {actions} from "features/auth";
-import { mockFetchAll, mockFetchSelected } from "../workspaceTestUtils";
-import { getSelectedWorkspaceAsync, getWorkspacesAsync } from "./workspaceThunks";
-import {waitForStateChange} from "test-utils"
+import { getSelectedWorkspaceAsync, getWorkspacesAsync } from "./workspaceFetchers";
+import {waitForStateChange, features} from "test-utils"
 
 describe("workspace slice", () => {
     
     describe("fetch items", () => {
         it("should fetch items after login", async () => {
             const store = createStore();
-            mockLogin({token: "ttt", userId: "uuu"});
-            const fetchSpy = mockFetchAll();
+            features.auth.mockLogin({token: "ttt", userId: "uuu"});
+            const fetchSpy = features.ws.mockFetchAll();
             expect(store.getState().workspaces.ids.length).toBe(0);
     
             await store.dispatch(actions.login({email: "ee", pass: "pp"})).unwrap();
@@ -26,7 +24,7 @@ describe("workspace slice", () => {
     
         it("should update isItemsFetching state", async () => {
             const store = createStore();
-            mockFetchAll();
+            features.ws.mockFetchAll();
     
             expect(store.getState().workspaces.isItemsFetching).toBe(false);
             const promise = store.dispatch(getWorkspacesAsync()).unwrap();
@@ -39,12 +37,12 @@ describe("workspace slice", () => {
 
     describe("fetch selected product", () => {
         beforeEach(() => {
-            mockFetchAll();
+            features.ws.mockFetchAll();
         })
         it("should fetch after login", async () => {
             const store = createStore();
-            mockLogin({token: "ttt", userId: "uuu"});
-            const selectedSpy = mockFetchSelected("ppp");
+            features.auth.mockLogin({token: "ttt", userId: "uuu"});
+            const selectedSpy = features.ws.mockFetchSelected("ppp");
             expect(store.getState().workspaces.selectedWorkspace).toBe(null);
     
             await store.dispatch(actions.login({email: "ee", pass: "pp"})).unwrap();
@@ -59,7 +57,7 @@ describe("workspace slice", () => {
 
         it("should update isItemsFetching state", async () => {
             const store = createStore();
-            mockFetchSelected();
+            features.ws.mockFetchSelected();
     
             expect(store.getState().workspaces.isSelectedFetching).toBe(false);
             const promise = store.dispatch(getSelectedWorkspaceAsync()).unwrap();

@@ -1,29 +1,44 @@
 import { Workspace } from "./store/types";
 import * as wsBE from "./store/workspaceBE";
-import { workSpaceSlice } from "./store/workSpaceSlice";
-import { getSelectedWorkspaceAsync, getWorkspacesAsync } from "./store/workspaceThunks";
+import { workspaceSlice } from "./store/workspaceSlice";
+import { getSelectedWorkspaceAsync, getWorkspacesAsync } from "./store/workspaceFetchers";
+import { TestUtils } from "test-utils/testUtilsHelpers";
+import { RootState } from "redux-root";
 
 const defaultWSs = [{ id: "w1", name: "www" }];
 const defaultSelected = "w1"
-
-export function mockFetchAll(items?: Workspace[]) {
-    return jest.spyOn(wsBE, "fetchAll").mockImplementation(() =>
-        Promise.resolve(items || defaultWSs)
-    );
+interface WorkspacesTestUtils extends TestUtils<"workspaces"> {
+    getInitializedState: (overrides?: {items?: Workspace[], selected?: string}) => {[workspaceSlice.name]: RootState["workspaces"]}
+    mockFetchAll: (items?: Workspace[]) => jest.SpyInstance
+    mockFetchSelected: (productId?: string) => jest.SpyInstance
 }
 
-export function mockFetchSelected(productId?: string) {
-    return jest.spyOn(wsBE, "fetchSelectedWorkspace").mockImplementation(() =>
-        Promise.resolve(productId || defaultSelected)
-    );
+const testUtils: WorkspacesTestUtils = {
+    getInitializedState: (overrides) => {
+        const state = workspaceSlice.getInitialState();
+        const withWS = workspaceSlice.reducer(
+            state, 
+            getWorkspacesAsync.fulfilled(overrides?.items || defaultWSs, "requestWS")
+        );
+        const withSelected = workspaceSlice.reducer(
+            withWS, 
+            getSelectedWorkspaceAsync.fulfilled(overrides?.selected || defaultSelected, "requestSelected")
+        );
+
+        return {
+            [workspaceSlice.name]: withSelected
+        };
+    },
+    mockFetchAll: (items) => {
+        return jest.spyOn(wsBE, "fetchAll").mockImplementation(() =>
+            Promise.resolve(items || defaultWSs)
+        );
+    },
+    mockFetchSelected: (productId) => {
+        return jest.spyOn(wsBE, "fetchSelectedWorkspace").mockImplementation(() =>
+            Promise.resolve(productId || defaultSelected)
+        );
+    }
 }
 
-export function getInitializedState(){
-    const state = workSpaceSlice.getInitialState();
-    const withWS = workSpaceSlice.reducer(state, getWorkspacesAsync.fulfilled(defaultWSs, "requestWS"));
-    const withSelected = workSpaceSlice.reducer(withWS, getSelectedWorkspaceAsync.fulfilled(defaultSelected, "requestSelected"));
-
-    return {
-        [workSpaceSlice.name]: withSelected
-    };
-}
+export default testUtils;

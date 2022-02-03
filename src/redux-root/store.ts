@@ -15,7 +15,7 @@ export function createStore(initialState?: any){
 
   const store = configureStore({
     reducer: {
-      counter: counterReducer,
+      // counter: counterReducer,
       [auth.name]: auth.reducer,
       [ws.name]: ws.reducer,
       [items.name]: items.reducer

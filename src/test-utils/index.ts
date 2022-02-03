@@ -1,5 +1,9 @@
 import { delay } from "lodash";
 import { StoreType, RootState } from "redux-root";
+import * as aggregatedFeatures from "./features";
+import { createStore } from "redux-root/store";
+
+const featuresTestUtils = aggregatedFeatures.features;
 
 export function waitForStateChange<T>(store: StoreType, selector: (state: RootState) => T, predicate: (state: T) => boolean){
     return  new Promise<void>((resolve, reject) => {
@@ -16,25 +20,20 @@ export function waitForStateChange<T>(store: StoreType, selector: (state: RootSt
         }, 100);
     });
 }
-import * as _auth from "features/auth/authTestUtils";
-import * as ws from "features/workspace/workspaceTestUtils"
-import * as items from "features/craft-items/testUtils"
-import { createStore } from "redux-root/store";
-export const auth = _auth;
+
 
 export function mockDefaults(){
-    _auth.mockLogin({userId:"sd", token: "tt" });
-    ws.mockFetchAll();
-    ws.mockFetchSelected();
+    featuresTestUtils.auth.mockLogin({userId:"sd", token: "tt" });
+    featuresTestUtils.ws.mockFetchAll();
+    featuresTestUtils.ws.mockFetchSelected();
 }
 
-export function getInitializedStore() {
-    const initialState = {
-        ..._auth.getInitializedState(),
-        ...ws.getInitializedState(),
-        ...items.getInitializedState()
-    };
+export function getInitializedStore(initialStateOverrides?: Partial<RootState>) {
+    let initialState = aggregatedFeatures.getInitializedState();
+    initialState = initialStateOverrides ? {...initialState, ...initialStateOverrides} : initialState;
 
     const store = createStore(initialState);
     return store;
 }
+
+export const features = featuresTestUtils; 

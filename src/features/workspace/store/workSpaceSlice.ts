@@ -3,11 +3,11 @@ import { defer } from "lodash";
 import { StoreChangeListener, SubscribeToChange } from "redux-root";
 import { subscribeToUserChanged } from "features/auth"
 import { Workspace } from "./types";
-import { getSelectedWorkspaceAsync, getWorkspacesAsync } from "./workspaceThunks";
+import { getSelectedWorkspaceAsync, getWorkspacesAsync } from "./workspaceFetchers";
 
 export const workspacesAdapter = createEntityAdapter<Workspace>();
 
-export const workSpaceSlice = createSlice({
+export const workspaceSlice = createSlice({
     name: "workspaces",
     initialState: workspacesAdapter.getInitialState({
         isItemsFetching: false,
@@ -51,8 +51,8 @@ export function initSlice({ subscribeToStoreChange }: { subscribeToStoreChange: 
         });
     });
     return {
-        reducer: workSpaceSlice.reducer,
-        name: workSpaceSlice.name
+        reducer: workspaceSlice.reducer,
+        name: workspaceSlice.name
     }
 }
 

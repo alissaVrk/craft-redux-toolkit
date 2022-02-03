@@ -1,11 +1,13 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { RootState } from "redux-root";
-import { workspacesAdapter } from "./workSpaceSlice";
+import { workspacesAdapter } from "./workspaceSlice";
 
 const itemsSelector = workspacesAdapter.getSelectors<RootState>((state) => state.workspaces);
 
 const selectIsFetching = (state: RootState) => 
         state.workspaces.isItemsFetching || state.workspaces.isSelectedFetching
+
+const selectSelectedWorkspaceId = (state: RootState) => state.workspaces.selectedWorkspace;
 
 const selectSelectedWorkspace = createSelector(
     (state: RootState) => state,
@@ -26,6 +28,7 @@ const selectAllAndSelected = createSelector(
 
 export const selectors = {
     ...itemsSelector,
+    selectSelectedWorkspace,
     selectIsFetching,
     selectAllAndSelected
 }

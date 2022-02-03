@@ -1,6 +1,5 @@
 import { actions as authActions } from "features/auth";
-import { mockFetchAll } from "../testUtils";
-import { waitForStateChange, mockDefaults } from "test-utils";
+import { waitForStateChange, mockDefaults, features } from "test-utils";
 import { createStore } from "redux-root/store";
 
 describe("fetch items", () => {
@@ -9,7 +8,7 @@ describe("fetch items", () => {
     });
     it("should fetch items after login", async () => {
         const store = createStore();
-        const fetchSpy = mockFetchAll();
+        const fetchSpy = features.items.mockFetchAll();
         expect(store.getState().items.ids.length).toBe(0);
 
         await store.dispatch(authActions.login({email: "ee", pass: "pp"})).unwrap();
@@ -24,7 +23,7 @@ describe("fetch items", () => {
 
     it("should update isItemsFetching state", async () => {
         const store = createStore();
-        mockFetchAll();
+        features.items.mockFetchAll();
         expect(store.getState().items.isFetching).toBe(false);
 
         await store.dispatch(authActions.login({email: "ee", pass: "pp"})).unwrap();
