@@ -1,7 +1,7 @@
 import { simpleUpdate } from "./craftItemsActions";
 
-export {selectors} from "./craftItemsSlice";
-export { initSlice } from "./craftItemsInit"
+export { initSlice, selectors } from "./craftItemsSlice";
+
 export const actions = {
     simpleUpdate
 }

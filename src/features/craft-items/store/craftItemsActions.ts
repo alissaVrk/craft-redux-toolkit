@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getAxionDefaultConfig, RootState, ThunkConfig } from "redux-root";
-import { updateItem } from "./craftItemsBE";
+import * as craftItemsBE from "./craftItemsBE";
 import { CraftItemUpdate } from "./types";
 import { craftItemsSlice, selectors } from "./craftItemsSlice"
 
@@ -12,7 +12,7 @@ export const simpleUpdate = createAsyncThunk<void, CraftItemUpdate, ThunkConfig>
     const config = getAxionDefaultConfig(rootState);
     const fullItem = selectors.selectById(rootState, item.id);
     try {
-        await updateItem({ ...fullItem, ...item }, config)
+        await craftItemsBE.updateItem({ ...fullItem, ...item }, config)
     } catch (err) {
         //TODO: it will be nice to get the item from the server in this case
         console.log("Error updating  " + item.id, err);

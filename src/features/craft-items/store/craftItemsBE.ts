@@ -1,6 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { CraftItemUpdate } from ".";
-import { CraftItem } from "./types";
+import { CraftItem, CraftItemUpdate } from "./types";
 
 export async function fetchAll(selectedWSId: string, userId: string, config: AxiosRequestConfig) {
     const result = await axios.post<{data: {updated: {items: CraftItem[]}}}>("api/sync/update", {

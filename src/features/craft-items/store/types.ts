@@ -1,10 +1,9 @@
 export enum CraftItemType {
-    Feature = "page",
+    Product= "feature",
     Epic = "topic",
+    Feature = "page",
     SubFeature = "subtask",
-    DD= "feature",
-    RR="req"
-
+    Request="req"
 }
 
 export type CraftItem = {

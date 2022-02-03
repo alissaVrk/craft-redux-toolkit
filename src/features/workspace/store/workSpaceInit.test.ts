@@ -1,6 +1,6 @@
 import { createStore } from "redux-root/store";
-import {actions} from "features/auth";
-import { getSelectedWorkspaceAsync, getWorkspacesAsync } from "./workspaceFetchers";
+import * as auth from "features/auth";
+import * as fetchActions from "./workspaceFetchers";
 import {waitForStateChange, features} from "test-utils"
 
 describe("workspace slice", () => {
@@ -12,7 +12,7 @@ describe("workspace slice", () => {
             const fetchSpy = features.ws.mockFetchAll();
             expect(store.getState().workspaces.ids.length).toBe(0);
     
-            await store.dispatch(actions.login({email: "ee", pass: "pp"})).unwrap();
+            await store.dispatch(auth.actions.login({email: "ee", pass: "pp"})).unwrap();
             await waitForStateChange(store, state => state.workspaces, ws => ws.ids.length > 0);
     
             expect(fetchSpy).toHaveBeenCalledTimes(1);
@@ -27,7 +27,7 @@ describe("workspace slice", () => {
             features.ws.mockFetchAll();
     
             expect(store.getState().workspaces.isItemsFetching).toBe(false);
-            const promise = store.dispatch(getWorkspacesAsync()).unwrap();
+            const promise = store.dispatch(fetchActions.getWorkspacesAsync()).unwrap();
             expect(store.getState().workspaces.isItemsFetching).toBe(true);
     
             await promise;
@@ -45,7 +45,7 @@ describe("workspace slice", () => {
             const selectedSpy = features.ws.mockFetchSelected("ppp");
             expect(store.getState().workspaces.selectedWorkspace).toBe(null);
     
-            await store.dispatch(actions.login({email: "ee", pass: "pp"})).unwrap();
+            await store.dispatch(auth.actions.login({email: "ee", pass: "pp"})).unwrap();
             await waitForStateChange(store, state => state.workspaces, ws => ws.selectedWorkspace !== null);
     
             expect(selectedSpy).toHaveBeenCalledTimes(1);
@@ -60,7 +60,7 @@ describe("workspace slice", () => {
             features.ws.mockFetchSelected();
     
             expect(store.getState().workspaces.isSelectedFetching).toBe(false);
-            const promise = store.dispatch(getSelectedWorkspaceAsync()).unwrap();
+            const promise = store.dispatch(fetchActions.getSelectedWorkspaceAsync()).unwrap();
             expect(store.getState().workspaces.isSelectedFetching).toBe(true);
     
             await promise;

@@ -1,7 +1,6 @@
-import { simpleUpdate } from "./craftItemsActions"
 import * as itemsBE from "./craftItemsBE"
 import { getInitializedStore } from "test-utils";
-import { selectors } from ".";
+import { selectors, actions } from ".";
 
 describe("async actions", () => {
     describe("simple update", () => {
@@ -12,7 +11,7 @@ describe("async actions", () => {
             const items = selectors.selectAll(store.getState())
             const item = items[0];
 
-            store.dispatch(simpleUpdate({id: item.id, title: "my fency"}));
+            store.dispatch(actions.simpleUpdate({id: item.id, title: "my fency"}));
             
             const updatedState = store.getState()
             const updatedItem = selectors.selectById(updatedState, item.id);

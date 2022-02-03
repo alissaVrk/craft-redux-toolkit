@@ -1,7 +1,7 @@
 import * as craftItemsBE from "./store/craftItemsBE";
 import { CraftItem, CraftItemType } from "./store/types";
 import { craftItemsSlice } from "./store/craftItemsSlice";
-import { getAllItemsAsync } from "./store/craftItemsInit";
+import { getAllItemsAsync } from "./store/craftItemsFetchers";
 import { TestUtils } from "test-utils/testUtilsHelpers";
 
 const defaultItems = [{ id: "i1", title: "ttt", type: CraftItemType.Feature }];

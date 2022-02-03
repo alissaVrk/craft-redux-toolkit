@@ -1,7 +1,9 @@
 import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
-import { RootState } from "redux-root";
+import { subscribeToWorkspaceChanged } from "features/workspace";
+import { defer } from "lodash";
+import { RootState, SubscribeToChange } from "redux-root";
+import { getAllItemsAsync } from "./craftItemsFetchers";
 import { CraftItem } from "./types";
-import { getAllItemsAsync } from "./craftItemsInit"
 
 export const craftItemsAdapter = createEntityAdapter<CraftItem>();
 
@@ -26,3 +28,16 @@ export const craftItemsSlice = createSlice({
 })
 
 export const selectors = craftItemsAdapter.getSelectors((state: RootState) => state.items);
+
+export function initSlice({ subscribeToStoreChange }: { subscribeToStoreChange: SubscribeToChange }) {
+    subscribeToWorkspaceChanged(subscribeToStoreChange, (state, dispatch) => {
+        if (!state) {
+            return;
+        }
+        defer(() => dispatch(getAllItemsAsync()));
+    });
+    return {
+        reducer: craftItemsSlice.reducer,
+        name: craftItemsSlice.name
+    }
+}
