@@ -1,6 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { RootState } from "redux-root";
-import { workspacesAdapter } from "./workspaceSlice";
+import { workspacesAdapter } from "./Fufu";
 
 const itemsSelector = workspacesAdapter.getSelectors<RootState>((state) => state.workspaces);
 

@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { ThunkConfig } from "redux-root";
 import { Workspace } from "./types";
-import { workspaceSlice } from "./workspaceSlice"
+import { workspaceSlice } from "./Fufu"
 
 export const selectWorkspace = createAsyncThunk<void, Workspace, ThunkConfig>("workspace/select", (selected, api) => {
     api.dispatch(workspaceSlice.actions.selectWorkspace(selected));
