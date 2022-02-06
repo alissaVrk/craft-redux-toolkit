@@ -11,10 +11,10 @@ export const craftItemsSlice = createSlice({
     name: "items",
     initialState: craftItemsAdapter.getInitialState({
         isFetching: false,
-        selectedWorkspace: null as null | string
     }),
     reducers: {
-        updateItem: craftItemsAdapter.updateOne
+        updateItem: craftItemsAdapter.updateOne,
+        updateManyItems: craftItemsAdapter.updateMany
     },
     extraReducers: builder => {
         builder.addCase(getAllItemsAsync.fulfilled, (state, action) => {

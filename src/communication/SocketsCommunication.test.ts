@@ -1,21 +1,7 @@
 import { noop } from "lodash";
 import { AppDispatch, StoreChangeListener, StoreType } from "redux-root";
+import { createSocketsAPI, wrapMessage } from "./communicationTestUtils";
 import { buildUrl, SocketsCommunication } from "./SocketsCommunication";
-import { MySocket, MySocketOptions } from "./types";
-
-function getAPI() {
-    const sockets: { [key: string]: MySocketOptions } = {}
-    return {
-        createSocket: (url: string, options: MySocketOptions) => {
-            sockets[url] = options;
-            return {} as MySocket;
-        },
-        sendToSocket: (url: string, data: any) => {
-            const socket = sockets[url];
-            socket.onmessage?.call({} as MySocket, { data } as unknown as MessageEvent);
-        }
-    }
-}
 
 function subscribeToWorkspaceChangeAndFire<T>(path: string, listener: StoreChangeListener<T>) {
     //@ts-ignore
@@ -23,15 +9,16 @@ function subscribeToWorkspaceChangeAndFire<T>(path: string, listener: StoreChang
 }
 
 const mockStore = {
-    dispacth: () => { }
+    dispacth: () => { },
+    getState:() => ({workspaces: {}})
 } as unknown as StoreType
 
 describe("Socket communication", () => {
     function connect() {
-        const api = getAPI();
+        const api = createSocketsAPI();
         const handler = jest.fn();
 
-        const communication = new SocketsCommunication(
+        new SocketsCommunication(
             mockStore,
             subscribeToWorkspaceChangeAndFire,
             api,
@@ -46,11 +33,11 @@ describe("Socket communication", () => {
         const { api, handler } = connect();
 
         const data = { a: 2 };
-        api.sendToSocket(buildUrl("ws1"), JSON.stringify(data));
+        api.sendToSocket(buildUrl("ws1"), JSON.stringify(wrapMessage("t1", data)));
         jest.runAllTimers();
 
         expect(handler).toHaveBeenCalledTimes(1);
-        expect(handler).toHaveBeenCalledWith([data], mockStore.dispatch);
+        expect(handler).toHaveBeenCalledWith([{data: data, type: "t1"}], mockStore.dispatch);
     });
 
     it("should throttle messages", () => {
@@ -60,12 +47,12 @@ describe("Socket communication", () => {
         const data1 = { a: 2 };
         const data2 = { a: 3 };
         const data3 = { a: 4 };
-        api.sendToSocket(buildUrl("ws1"), JSON.stringify(data1));
-        api.sendToSocket(buildUrl("ws1"), JSON.stringify(data2));
+        api.sendToSocket(buildUrl("ws1"), JSON.stringify(wrapMessage("t1", data1)));
+        api.sendToSocket(buildUrl("ws1"), JSON.stringify(wrapMessage("t1", data2)));
         jest.runAllTimers();
-        api.sendToSocket(buildUrl("ws1"), JSON.stringify(data3));
+        api.sendToSocket(buildUrl("ws1"), JSON.stringify(wrapMessage("t1", data3)));
 
         expect(handler).toHaveBeenCalledTimes(1);
-        expect(handler).toHaveBeenCalledWith([data1, data2], mockStore.dispatch);
+        expect(handler).toHaveBeenCalledWith([{data:data1, type: "t1"}, {data:data2, type: "t1"}], mockStore.dispatch);
     });
 });

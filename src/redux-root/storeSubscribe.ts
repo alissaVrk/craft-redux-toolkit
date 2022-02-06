@@ -21,13 +21,18 @@ export function createSubsriber<T extends EnhancedStore>() {
 
     function subscribe(_store: T) {
         store = _store;
+        //for the case that the store is initialized with values - probably what we will do in ng
+        broadcast();
         return store.subscribe(() => {
-            const currentState = store.getState();
-            Object.keys(subscriptions).forEach(path => handlePath(path, prevState, currentState));
-            prevState = currentState;
+           broadcast();
         });
     }
 
+    function broadcast(){
+        const currentState = store.getState();
+        Object.keys(subscriptions).forEach(path => handlePath(path, prevState, currentState));
+        prevState = currentState;
+    }
 
     return {
         subscribe,

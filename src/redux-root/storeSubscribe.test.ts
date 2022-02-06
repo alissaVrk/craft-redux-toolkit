@@ -1,5 +1,4 @@
 import { createSlice, configureStore } from "@reduxjs/toolkit";
-import { noop } from "lodash";
 import {createSubsriber} from "./storeSubscribe"
 
 describe("store subscribtion", () => {
@@ -26,23 +25,39 @@ describe("store subscribtion", () => {
             }
         })
     }
-    type Store = ReturnType<typeof getStore> 
-    let store: Store;
-    let subscribeToChange : ReturnType<typeof createSubsriber>["subscribeToChange"];
-    let unsubscribe: () => void;
     
-    beforeEach(() => {
-        store = getStore();
-        const stuff = createSubsriber();
-        subscribeToChange = stuff.subscribeToChange;
-        unsubscribe = stuff.subscribe(store);
+    function getStoreAndSubscription(){
+        const store = getStore();
+        const {subscribe, subscribeToChange} = createSubsriber();
+        return {store, subscribeToChange, startListening: subscribe}
+    }
+
+    it("should call listener with initial state with subscribed before start listening ", () => {
+        const {store, subscribeToChange, startListening} = getStoreAndSubscription()
+        const cb = jest.fn();
+        subscribeToChange("counter1", cb);
+        const unsubscribe = startListening(store);
+
+        expect(cb).toHaveBeenCalledTimes(1);
+        expect(cb).toHaveBeenCalledWith({value: 1}, expect.anything());
+        unsubscribe();
     });
 
-    afterEach(() => {
+    it("should not call listener with current state with subscribed after start listening",() => {
+        const {store, subscribeToChange, startListening} = getStoreAndSubscription()
+        const unsubscribe = startListening(store);
+
+        const cb = jest.fn();
+        subscribeToChange("counter1", cb);
+
+        expect(cb).not.toHaveBeenCalled();
         unsubscribe();
     });
 
     it("should call listener when store changes with state in path", () => {
+        const {store, subscribeToChange, startListening} = getStoreAndSubscription()
+        const unsubscribe = startListening(store);
+
         const cb = jest.fn();
         subscribeToChange("counter1", cb);
 
@@ -50,18 +65,26 @@ describe("store subscribtion", () => {
 
         expect(cb).toHaveBeenCalledTimes(1);
         expect(cb).toHaveBeenCalledWith({value: 2}, expect.anything());
+        unsubscribe();
     });
 
     it("should not call listener of other part", () => {
+        const {store, subscribeToChange, startListening} = getStoreAndSubscription()
+        const unsubscribe = startListening(store);
+
         const cb = jest.fn();
         subscribeToChange("counter2", cb);
 
         store.dispatch(counterSlice1.actions.increment());
 
         expect(cb).not.toHaveBeenCalledWith();
+        unsubscribe();
     });
 
     it("should subscribe to inner slice part", () => {
+        const {store, subscribeToChange, startListening} = getStoreAndSubscription()
+        const unsubscribe = startListening(store);
+
         const cb = jest.fn();
         subscribeToChange("counter1.value", cb);
 
@@ -69,9 +92,13 @@ describe("store subscribtion", () => {
 
         expect(cb).toHaveBeenCalledTimes(1);
         expect(cb).toHaveBeenCalledWith(2, expect.anything());
+        unsubscribe();
     });
 
     it("should call multiple listeners", () => {
+        const {store, subscribeToChange, startListening} = getStoreAndSubscription()
+        const unsubscribe = startListening(store);
+
         const cb1 = jest.fn();
         subscribeToChange("counter1.value", cb1);
         const cb2 = jest.fn();
@@ -81,5 +108,6 @@ describe("store subscribtion", () => {
 
         expect(cb1).toHaveBeenCalledTimes(1);
         expect(cb2).toHaveBeenCalledTimes(1);
+        unsubscribe();
     })
 });

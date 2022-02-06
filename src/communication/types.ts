@@ -9,5 +9,10 @@ export type SocketAPI = {
 }
 
 export type MessageHandlers = {
-    workspace: (msgs: any[], dispatch: AppDispatch) => void
+    workspace: (msgs: SocketMessage[], dispatch: AppDispatch) => void
+}
+
+export type SocketMessage = {
+    type: string,
+    data: any
 }

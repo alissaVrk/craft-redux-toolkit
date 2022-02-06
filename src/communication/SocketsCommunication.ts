@@ -1,7 +1,7 @@
-import { subscribeToWorkspaceChanged } from "features/workspace";
+import { subscribeToWorkspaceChanged, selectors as wsSelectors } from "features/workspace";
 import { StoreType, SubscribeToChange } from "redux-root";
-import { throttle } from "lodash";
-import { SocketAPI, MySocket, MessageHandlers } from "./types";
+import { isEmpty, throttle } from "lodash";
+import { SocketAPI, MySocket, MessageHandlers, SocketMessage } from "./types";
 
 export class SocketsCommunication {
     private store;
@@ -14,6 +14,10 @@ export class SocketsCommunication {
         this.store = store;
         this.socketAPI = socketAPI;
         this.messageHandlers = handlers;
+        const currentWs = wsSelectors.selectSelectedWorkspace(store.getState())
+        if (!isEmpty(currentWs)) {
+            this.onWorkspaceChange(currentWs!.id);
+        }
         subscribeToWorkspaceChanged(subscribeToChange, (selectedWorkspace) => {
             this.onWorkspaceChange(selectedWorkspace);
         });
@@ -29,7 +33,7 @@ export class SocketsCommunication {
             onmessage: (event) => {
                 try {
                     const data = JSON.parse(event.data);
-                    this.messages.workspace.push(data);
+                    this.messages.workspace.push({type: data.event, data: data.data.info});
                     this.throttled();
                 } catch(err) {
                     console.log("SOCKET parsing error", err)
@@ -44,7 +48,7 @@ export class SocketsCommunication {
         });
     }
 
-    private throttled = throttle(this.processMessages.bind(this), 3000,{
+    private throttled = throttle(this.processMessages.bind(this), 10,{
         leading: false,
         trailing:true
     })
@@ -59,6 +63,6 @@ export class SocketsCommunication {
 
 export const buildUrl = (workspaceId: string) => `wss://${process.env.REACT_APP_SERVER_API}/ws/ch${workspaceId}`
 
-const cleanMessages = (): {[key in keyof MessageHandlers]: any[]} => ({
+const cleanMessages = (): {[key in keyof MessageHandlers]: SocketMessage[]} => ({
     workspace: []
 });
