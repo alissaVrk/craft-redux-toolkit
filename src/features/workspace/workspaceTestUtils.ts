@@ -1,6 +1,6 @@
 import { Workspace } from "./store/types";
 import * as wsBE from "./store/workspaceBE";
-import { workspaceSlice } from "./store/Fufu";
+import { workspaceSlice } from "./store/workspaceSlice";
 import { getSelectedWorkspaceAsync, getWorkspacesAsync } from "./store/workspaceFetchers";
 import { TestUtils } from "test-utils/testUtilsHelpers";
 import { RootState } from "redux-root";
