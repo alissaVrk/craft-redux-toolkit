@@ -5,7 +5,10 @@ import { getAllItemsAsync } from "./store/craftItemsFetchers";
 import { TestUtils } from "test-utils/testUtilsHelpers";
 import { RootState } from "redux-root";
 
-const defaultItems = [{ id: "i1", title: "ttt", type: CraftItemType.Feature }];
+const defaultItems = [
+    { id: "i1", title: "ttt", type: CraftItemType.Feature },
+    { id: "i2", title: "fff", type: CraftItemType.Feature }
+];
 
 
 interface ItemsTestUtils extends TestUtils<"items"> {

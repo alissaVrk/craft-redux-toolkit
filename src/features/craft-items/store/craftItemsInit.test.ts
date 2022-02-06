@@ -15,7 +15,7 @@ describe("fetch items", () => {
         await waitForStateChange(store, state => state.items, items => items.ids.length > 0);
 
         expect(fetchSpy).toHaveBeenCalledTimes(1);
-        expect(store.getState().items.ids.length).toBe(1);
+        expect(store.getState().items.ids.length).toBe(2);
     });
 
     it.todo("should clear on logout");

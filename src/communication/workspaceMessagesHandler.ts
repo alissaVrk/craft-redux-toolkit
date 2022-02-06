@@ -13,9 +13,9 @@ export function handleMessages(msgs: SocketMessage[], dispatch: AppDispatch) {
 }
 
 function processMessages(dispatch: AppDispatch, msgs: SocketMessage[], type: MessageType) {
-    const dataItems = msgs.map(msg => ({id: msg.data.id, changes: msg.data}));
     switch(type) {
         case MessageType.updateItem:
+            const dataItems = msgs.map(msg => ({id: msg.data.id, changes: msg.data}));
             dispatch(itemsActions.updateManyItems(dataItems))
             break;
         default:
