@@ -2,11 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import { createStore } from './redux-root/store';
+import { createStoreAndSubscription } from './redux-root/store';
 import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
+import { initSockets } from 'communication';
 
-const store = createStore();
+const {store, subscribeToChange} = createStoreAndSubscription();
+
+const socketCommunication = initSockets(store, subscribeToChange);
 
 ReactDOM.render(
   <React.StrictMode>

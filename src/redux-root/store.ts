@@ -5,17 +5,16 @@ import {initSlice as initWs} from "features/workspace/store";
 import {initSlice as initItems} from "features/craft-items";
 import { createSubsriber } from './storeSubscribe';
 
-export function createStore(initialState?: any){
+export function createStoreAndSubscription(initialState?: any) {
   const {subscribe, subscribeToChange} = createSubsriber();
-
   const subscribeArg = {subscribeToStoreChange: subscribeToChange} 
   const auth = initAuth(subscribeArg);
   const ws = initWs(subscribeArg);
   const items = initItems(subscribeArg);
-
+  
   const store = configureStore({
     reducer: {
-      // counter: counterReducer,
+      counter: counterReducer,
       [auth.name]: auth.reducer,
       [ws.name]: ws.reducer,
       [items.name]: items.reducer
@@ -25,5 +24,13 @@ export function createStore(initialState?: any){
 
   subscribe(store);
 
+  return {
+    store,
+    subscribeToChange
+  }
+}
+
+export function createStore(initialState?: any) {
+  const {store} = createStoreAndSubscription(initialState);
   return store;
 }
