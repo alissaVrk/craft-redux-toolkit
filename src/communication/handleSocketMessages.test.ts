@@ -4,7 +4,6 @@ import { selectors as itemsSelectors } from "features/craft-items";
 import { selectors as wsSelectors } from "features/workspace";
 import { MessageType } from "./workspaceMessagesHandler";
 import { buildUrl } from "./SocketsCommunication";
-import { isDate } from "lodash";
 
 describe("handle socket messages", () => {
 
@@ -27,7 +26,7 @@ describe("handle socket messages", () => {
             title: "new title"
         });
 
-        socketsApi.sendToSocket(socketUrl, JSON.stringify(msg));
+        socketsApi.sendOnSocket(socketUrl, JSON.stringify(msg));
         jest.runAllTimers();
 
         const item = itemsSelectors.selectById(store.getState(), itemId);
@@ -44,7 +43,7 @@ describe("handle socket messages", () => {
             title: "new title_" + id
         }));
 
-        itemIds.forEach((id, index) => socketsApi.sendToSocket(socketUrl, JSON.stringify(msgs[index])));
+        itemIds.forEach((id, index) => socketsApi.sendOnSocket(socketUrl, JSON.stringify(msgs[index])));
         jest.runAllTimers();
 
         const items = itemsSelectors.selectAll(store.getState());
@@ -55,7 +54,7 @@ describe("handle socket messages", () => {
         jest.useFakeTimers();
         const {socketsApi, store, socketUrl, itemIds} = initStuff();
 
-        socketsApi.sendToSocket(socketUrl, JSON.stringify({data: {}, event: "other"}));
+        socketsApi.sendOnSocket(socketUrl, JSON.stringify({data: {}, event: "other"}));
         jest.runAllTimers();
     })
 });

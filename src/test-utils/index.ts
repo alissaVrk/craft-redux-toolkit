@@ -3,7 +3,7 @@ import { StoreType, RootState } from "redux-root";
 import * as aggregatedFeatures from "./features";
 import { createStore, createStoreAndSubscription } from "redux-root/store";
 
-const featuresTestUtils = aggregatedFeatures.features;
+const _featuresTestUtils = aggregatedFeatures.features;
 
 export function waitForStateChange<T>(store: StoreType, selector: (state: RootState) => T, predicate: (state: T) => boolean){
     return  new Promise<void>((resolve, reject) => {
@@ -23,9 +23,9 @@ export function waitForStateChange<T>(store: StoreType, selector: (state: RootSt
 
 
 export function mockDefaults(){
-    featuresTestUtils.auth.mockLogin({userId:"sd", token: "tt" });
-    featuresTestUtils.ws.mockFetchAll();
-    featuresTestUtils.ws.mockFetchSelected();
+    _featuresTestUtils.auth.mockLogin({userId:"sd", token: "tt" });
+    _featuresTestUtils.ws.mockFetchAll();
+    _featuresTestUtils.ws.mockFetchSelected();
 }
 
 export function getInitializedStore(initialStateOverrides?: Partial<RootState>) {
@@ -42,4 +42,4 @@ export function getInitialzedStoreWithSubscruption(initialStateOverrides?: Parti
     return createStoreAndSubscription(initialState);
 }
 
-export const features = featuresTestUtils; 
+export const featuresTestUtils = _featuresTestUtils; 

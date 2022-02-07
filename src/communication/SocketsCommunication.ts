@@ -14,6 +14,7 @@ export class SocketsCommunication {
         this.store = store;
         this.socketAPI = socketAPI;
         this.messageHandlers = handlers;
+        
         const currentWs = wsSelectors.selectSelectedWorkspace(store.getState())
         if (!isEmpty(currentWs)) {
             this.onWorkspaceChange(currentWs!.id);
@@ -48,7 +49,7 @@ export class SocketsCommunication {
         });
     }
 
-    private throttled = throttle(this.processMessages.bind(this), 10,{
+    private throttled = throttle(this.processMessages.bind(this), 3000,{
         leading: false,
         trailing:true
     })

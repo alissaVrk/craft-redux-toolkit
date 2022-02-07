@@ -10,7 +10,7 @@ export function createSocketsAPI() {
             sockets[url] = options;
             return {} as MySocket;
         },
-        sendToSocket: (url: string, data: any) => {
+        sendOnSocket: (url: string, data: any) => {
             const socket = sockets[url];
             socket.onmessage?.call({} as MySocket, { data } as unknown as MessageEvent);
         }
