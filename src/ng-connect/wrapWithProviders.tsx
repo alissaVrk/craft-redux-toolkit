@@ -1,4 +1,4 @@
-import { createSimpleReactiveStore } from "./SimpleReactiveStore";
+import { createSimpleReactiveStore } from "./connectUtils/SimpleReactiveStore";
 import ReactDOM from "react-dom";
 
 const store = createSimpleReactiveStore();
