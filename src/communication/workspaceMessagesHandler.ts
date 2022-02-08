@@ -4,7 +4,8 @@ import { SocketMessage } from "./types";
 import { localOnlyActions as itemsActions } from "features/craft-items"
 
 export enum MessageType {
-    updateItem = "product:item:update"
+    updateItem = "product:item:update",
+    createItem = "product:item:create"
 }
 
 export function handleMessages(msgs: SocketMessage[], dispatch: AppDispatch) {
@@ -15,8 +16,12 @@ export function handleMessages(msgs: SocketMessage[], dispatch: AppDispatch) {
 function processMessages(dispatch: AppDispatch, msgs: SocketMessage[], type: MessageType) {
     switch(type) {
         case MessageType.updateItem:
-            const dataItems = msgs.map(msg => ({id: msg.data.id, changes: msg.data}));
-            dispatch(itemsActions.updateManyItems(dataItems))
+            const updateItems = msgs.map(msg => ({id: msg.data.id, changes: msg.data}));
+            dispatch(itemsActions.updateManyItems(updateItems));
+            break;
+        case MessageType.createItem:
+            const addItems = msgs.map(msg => msg.data);
+            dispatch(itemsActions.addManyItem(addItems));
             break;
         default:
             console.log("socket message not supported", type);

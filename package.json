@@ -1,6 +1,6 @@
 {
-  "name": "alissa-craft-react",
-  "version": "0.2.0",
+  "name": "alissa-todo-react-query",
+  "version": "0.3.0",
   "private": true,
   "proxy": "https://app-pp3.craft.io",
   "main": "lib/cjs/index.js",

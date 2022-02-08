@@ -14,7 +14,8 @@ export const craftItemsSlice = createSlice({
     }),
     reducers: {
         updateItem: craftItemsAdapter.updateOne,
-        updateManyItems: craftItemsAdapter.updateMany
+        updateManyItems: craftItemsAdapter.updateMany,
+        addManyItem: craftItemsAdapter.addMany
     },
     extraReducers: builder => {
         builder.addCase(getAllItemsAsync.fulfilled, (state, action) => {
