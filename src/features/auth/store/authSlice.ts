@@ -1,7 +1,6 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { StoreChangeListener, SubscribeToChange } from "redux-root";
+import {  createSlice } from "@reduxjs/toolkit";
+import { StoreChangeListener, SubscribeToChange, createThunkWithBE_API } from "redux-root";
 import { v4 as uuidv4 } from 'uuid';
-import { loginBE } from "./authBE";
 import { User } from "./types";
 
 
@@ -14,8 +13,8 @@ type AuthState = {
     user: User
 }
 
-export const login = createAsyncThunk("login", async ({email, pass}: {email: string, pass: string}) => {
-    const userInfo = await loginBE(email, pass); 
+export const login = createThunkWithBE_API("auth/login", async ({email, pass}: {email: string, pass: string}, api, beAPI) => {
+    const userInfo = await beAPI.auth.login(email, pass); 
     return {
         ...userInfo,
         sessioId: uuidv4()

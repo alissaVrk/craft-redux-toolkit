@@ -14,3 +14,4 @@ export type CraftItem = {
 
 export type CraftItemUpdate = Partial<CraftItem> & {id: CraftItem["id"]};
 export type CraftItemAdd = Omit<CraftItem, "id">
+export type {CraftItemsBE } from "./craftItemsBE"

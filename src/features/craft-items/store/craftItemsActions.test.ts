@@ -1,11 +1,11 @@
-import * as itemsBE from "./craftItemsBE"
-import { getInitializedStore } from "test-utils";
+import { getInitializedStore, mockBeApi } from "test-utils";
 import { selectors, actions } from ".";
 
 describe("async actions", () => {
     describe("simple update", () => {
         it("should update item title and send request to server", async () => {
-            const updateSpy = jest.spyOn(itemsBE, "updateItem").mockImplementation(() => Promise.resolve());
+            const beApiSpies = mockBeApi();
+            const updateSpy = beApiSpies.items.updateItem;
 
             const store = getInitializedStore();
             const items = selectors.selectAll(store.getState())
@@ -18,7 +18,7 @@ describe("async actions", () => {
 
             expect(updatedItem?.title).toBe("my fency");
             expect(updateSpy).toHaveBeenCalledTimes(1);
-            expect(updateSpy).toHaveBeenLastCalledWith(updatedItem, expect.anything());
+            expect(updateSpy).toHaveBeenLastCalledWith(updatedItem);
         });
     });
 });

@@ -1,4 +1,5 @@
 import { RootState } from "./types";
+import axios from "axios";
 
 export function getAxionDefaultConfig(state: RootState) {
     const userBase = state.auth.base
@@ -9,4 +10,14 @@ export function getAxionDefaultConfig(state: RootState) {
             withCredentials: true
         }
     }
+}
+
+export function getAxiosInstance(userData: {token: string, sessionId: string}) {
+    return axios.create({
+        headers: {
+            "X-CSRF-TOKEN": userData.token,
+            "X-CLIENT-ID": userData.sessionId,
+            withCredentials: true
+        }
+    })
 }

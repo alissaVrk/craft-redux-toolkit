@@ -1,8 +1,7 @@
-import * as craftItemsBE from "./store/craftItemsBE";
-import { CraftItem, CraftItemType } from "./store/types";
+import { CraftItem, CraftItemType, CraftItemsBE } from "./store/types";
 import { craftItemsSlice } from "./store/craftItemsSlice";
 import { getAllItemsAsync } from "./store/craftItemsFetchers";
-import { TestUtils } from "test-utils/testUtilsHelpers";
+import type { TestUtils } from "test-utils";
 import { RootState } from "redux-root";
 
 const defaultItems = [
@@ -10,14 +9,15 @@ const defaultItems = [
     { id: "i2", title: "fff", type: CraftItemType.Feature }
 ];
 
-
-interface ItemsTestUtils extends TestUtils<"items"> {
-    getInitializedState: (overrides?: CraftItem[]) => {[craftItemsSlice.name]: RootState["items"]}
-    mockFetchAll: (items?: CraftItem[]) => jest.SpyInstance
+export function getMockedItemsBE(): Record<keyof CraftItemsBE, jest.Mock>{
+    return {
+        fetchAll: jest.fn().mockResolvedValue([...defaultItems]),
+        updateItem: jest.fn().mockResolvedValue(undefined)
+    }
 }
-
-const testUtils: ItemsTestUtils = {
-    getInitializedState: (overrides) => {
+export class ItemsTestUtils implements TestUtils<"items"> {
+    getInitializedState(): {[craftItemsSlice.name]: RootState["items"]}
+    getInitializedState(overrides?: CraftItem[]) {
         const state = craftItemsSlice.getInitialState();
         const withItems = craftItemsSlice.reducer(
             state, 
@@ -27,12 +27,7 @@ const testUtils: ItemsTestUtils = {
         return {
             [craftItemsSlice.name]: withItems
         };
-    },
-    mockFetchAll: (items) => {
-        return jest.spyOn(craftItemsBE, "fetchAll").mockImplementation(() =>
-            Promise.resolve(items || defaultItems)
-        );
     }
 }
 
-export default testUtils;
+export const craftItemTestUtils = new ItemsTestUtils();

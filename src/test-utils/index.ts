@@ -2,6 +2,11 @@ import { delay } from "lodash";
 import { StoreType, RootState } from "redux-root";
 import * as aggregatedFeatures from "./features";
 import { createStore, createStoreAndSubscription } from "redux-root/store";
+import { AggregatedBackEndAPI, BE_API } from "be-api"
+
+export interface TestUtils<K extends keyof RootState> {
+    getInitializedState: () => {[key in K]: RootState[key]}
+}
 
 const _featuresTestUtils = aggregatedFeatures.features;
 
@@ -21,11 +26,11 @@ export function waitForStateChange<T>(store: StoreType, selector: (state: RootSt
     });
 }
 
-
-export function mockDefaults(){
-    _featuresTestUtils.auth.mockLogin({userId:"sd", token: "tt" });
-    _featuresTestUtils.ws.mockFetchAll();
-    _featuresTestUtils.ws.mockFetchSelected();
+export function mockBeApi(){
+    const instance = aggregatedFeatures.getMockedBeApi();
+    jest.spyOn(BE_API, "createInstance")
+        .mockReturnValue(instance as unknown as AggregatedBackEndAPI)
+    return instance;
 }
 
 export function getInitializedStore(initialStateOverrides?: Partial<RootState>) {

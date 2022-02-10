@@ -21,7 +21,7 @@ export function createStoreAndSubscription(initialState?: any) {
     },
     preloadedState: initialState
   });
-
+  
   subscribe(store);
 
   return {

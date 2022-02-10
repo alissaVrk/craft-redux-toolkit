@@ -1,20 +1,24 @@
-import { Workspace } from "./store/types";
-import * as wsBE from "./store/workspaceBE";
+import { Workspace, WorkspaceBE } from "./store/types";
 import { workspaceSlice } from "./store/workspaceSlice";
 import { getSelectedWorkspaceAsync, getWorkspacesAsync } from "./store/workspaceFetchers";
-import { TestUtils } from "test-utils/testUtilsHelpers";
+import type { TestUtils } from "test-utils";
 import { RootState } from "redux-root";
 
 const defaultWSs = [{ id: "w1", name: "www" }];
 const defaultSelected = "w1"
-interface WorkspacesTestUtils extends TestUtils<"workspaces"> {
-    getInitializedState: (overrides?: {items?: Workspace[], selected?: string}) => {[workspaceSlice.name]: RootState["workspaces"]}
-    mockFetchAll: (items?: Workspace[]) => jest.SpyInstance
-    mockFetchSelected: (productId?: string) => jest.SpyInstance
+
+export function getMockedWorskapceBE(): Record<keyof WorkspaceBE, jest.Mock> {
+    return {
+        fetchAll: jest.fn().mockResolvedValue([...defaultWSs]),
+        fetchSelectedWorkspace: jest.fn().mockResolvedValue(defaultSelected)
+    }
 }
 
-const testUtils: WorkspacesTestUtils = {
-    getInitializedState: (overrides) => {
+type WorkspaceState = {[workspaceSlice.name]: RootState["workspaces"]};
+
+class WorkspacesTestUtils implements TestUtils<"workspaces">{
+    getInitializedState(): WorkspaceState;
+    getInitializedState(overrides?: {items?: Workspace[], selected?: string}){
         const state = workspaceSlice.getInitialState();
         const withWS = workspaceSlice.reducer(
             state, 
@@ -28,17 +32,6 @@ const testUtils: WorkspacesTestUtils = {
         return {
             [workspaceSlice.name]: withSelected
         };
-    },
-    mockFetchAll: (items) => {
-        return jest.spyOn(wsBE, "fetchAll").mockImplementation(() =>
-            Promise.resolve(items || defaultWSs)
-        );
-    },
-    mockFetchSelected: (productId) => {
-        return jest.spyOn(wsBE, "fetchSelectedWorkspace").mockImplementation(() =>
-            Promise.resolve(productId || defaultSelected)
-        );
     }
 }
-
-export default testUtils;
+export const workspaceTestUtils = new WorkspacesTestUtils()
