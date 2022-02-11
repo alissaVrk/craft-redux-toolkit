@@ -16,9 +16,10 @@ export function getMockedWorskapceBE(): Record<keyof WorkspaceBE, jest.Mock> {
 
 type WorkspaceState = {[workspaceSlice.name]: RootState["workspaces"]};
 
-class WorkspacesTestUtils implements TestUtils<"workspaces">{
+class WorkspacesTestUtils /*implements TestUtils<"workspaces">*/{
     getInitializedState(): WorkspaceState;
-    getInitializedState(overrides?: {items?: Workspace[], selected?: string}){
+    getInitializedState(overrides: {items?: Workspace[], selected?: string}): WorkspaceState;
+    getInitializedState(overrides?: {items?: Workspace[], selected?: string}): WorkspaceState {
         const state = workspaceSlice.getInitialState();
         const withWS = workspaceSlice.reducer(
             state, 

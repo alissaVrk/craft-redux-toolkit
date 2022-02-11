@@ -17,6 +17,7 @@ export function getMockedItemsBE(): Record<keyof CraftItemsBE, jest.Mock>{
 }
 export class ItemsTestUtils implements TestUtils<"items"> {
     getInitializedState(): {[craftItemsSlice.name]: RootState["items"]}
+    getInitializedState(overrides: CraftItem[]): {[craftItemsSlice.name]: RootState["items"]}
     getInitializedState(overrides?: CraftItem[]) {
         const state = craftItemsSlice.getInitialState();
         const withItems = craftItemsSlice.reducer(
