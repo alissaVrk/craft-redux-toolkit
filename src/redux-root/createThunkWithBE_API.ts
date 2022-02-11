@@ -2,7 +2,7 @@ import {createAsyncThunk, AsyncThunkPayloadCreator, AsyncThunkPayloadCreatorRetu
 import { RootState, ThunkConfig } from "./types";
 import { AggregatedBackEndAPI, BE_API } from "redux-root/be-api";
 import { getAxiosInstance } from "./fetchHelpers";
-// import {selectors as authSelectors} from "features/auth"
+import {selectors as authSelectors} from "features/auth"
 
 type AppThunkCreator<Returned, ThunkArgs = void> = AsyncThunkPayloadCreator<Returned, ThunkArgs, ThunkConfig>
 type ParamsOfCreator<Returned, ThunkArgs> = Parameters<AppThunkCreator<Returned, ThunkArgs>>
@@ -15,7 +15,7 @@ type AppThunkCreatorWithBE_API<Returned, ThunkArgs = void> =
 
 const selectBE_API = createSelector(
     (state: RootState) => {
-        return  state.auth.base //authSelectors.selectUserBaseInfo(state)
+        return authSelectors.selectUserBaseInfo(state)
     },
     (authBase) => {
         const axiosInstance = getAxiosInstance(authBase)
