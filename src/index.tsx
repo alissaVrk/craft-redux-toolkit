@@ -6,10 +6,11 @@ import { createStoreAndSubscription } from './redux-root/store';
 import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 import { initSockets } from 'communication';
+import "features/initialFeature";
 
 const {store, subscribeToChange} = createStoreAndSubscription();
 
-const socketCommunication = initSockets(store, subscribeToChange);
+initSockets(store, subscribeToChange);
 
 ReactDOM.render(
   <React.StrictMode>

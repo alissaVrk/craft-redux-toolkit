@@ -50,10 +50,7 @@ export function initSlice({ subscribeToStoreChange }: { subscribeToStoreChange: 
             dispatch(getSelectedWorkspaceAsync())
         });
     });
-    return {
-        reducer: workspaceSlice.reducer,
-        name: workspaceSlice.name
-    }
+    return workspaceSlice.reducer
 }
 
 export function subscribeToWorkspaceChanged(subscribeToStoreChange: SubscribeToChange, listener: StoreChangeListener<string>) {

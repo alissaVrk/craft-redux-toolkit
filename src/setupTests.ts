@@ -3,6 +3,7 @@
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom/extend-expect';
+import "features/initialFeature";
 
 type Selector = {memoizedResultFunc: {clearCache:() => void}}
 jest.mock("axios");

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { BaseBackEndAPI } from "be-api";
+import { BaseBackEndAPI } from "redux-root";
 import { User } from "./types";
 
 export async function loginBE(email: string, pass: string){

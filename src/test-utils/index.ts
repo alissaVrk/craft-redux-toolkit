@@ -2,7 +2,7 @@ import { delay } from "lodash";
 import { StoreType, RootState } from "redux-root";
 import * as aggregatedFeatures from "./features";
 import { createStore, createStoreAndSubscription } from "redux-root/store";
-import { AggregatedBackEndAPI, BE_API } from "be-api"
+import { AggregatedBackEndAPI, BE_API } from "redux-root/be-api"
 
 export interface TestUtils<K extends keyof RootState> {
     getInitializedState: () => {[key in K]: RootState[key]}

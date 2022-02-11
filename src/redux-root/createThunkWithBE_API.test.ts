@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import axios, { AxiosInstance } from "axios";
-import { AggregatedBackEndAPI, BaseBackEndAPI, registerBackendAPI } from "be-api";
+import { AggregatedBackEndAPI, BaseBackEndAPI, registerBackendAPI } from "redux-root";
 import { createThunkWithBE_API } from "./createThunkWithBE_API";
 import { featuresTestUtils } from "test-utils"
 
@@ -35,23 +35,39 @@ describe("bind be", () => {
         } as unknown as AxiosInstance));
     }
 
+    function getStore(withUser = false) {
+        const actionReducer = jest.fn();
+        const authState = withUser
+            ? featuresTestUtils.auth.getInitializedState()
+            : featuresTestUtils.auth.getStateWithoutUser();
+
+        const store = configureStore({
+            reducer: (state, action) => {
+                if (action.type === "login") {
+                    return {
+                        ...state,
+                        ...featuresTestUtils.auth.getInitializedState()
+                    }
+                }
+                actionReducer(action.type);
+                return state;
+            },
+            preloadedState: authState
+        });
+
+        return {store, actionReducer};
+    }
+
     it("should create api without user data and successfully dispatch an action that doesn't need it", async () => {
         setupBE();
         const withoutUserAction = createThunkWithBE_API("test/no-user", async (args, api, beApi) => {
             const testBeApi = beApi as TestAggregated;
             return testBeApi.withoutUser.fetchA()
         });
-        const actionReducer = jest.fn();
-        const store = configureStore({
-            reducer: (state, action) => {
-                actionReducer(action.type);
-                return state;
-            },
-            preloadedState: featuresTestUtils.auth.getStateWithoutUser()
-        });
-
+        const {actionReducer, store} = getStore();
+        
         actionReducer.mockClear();
-        await store.dispatch(withoutUserAction()).unwrap();
+        await store.dispatch(withoutUserAction()).unwrap().catch(() => {});;
 
         expect(actionReducer).toHaveBeenCalledTimes(2);
         expect(actionReducer).toHaveBeenNthCalledWith(1, "test/no-user/pending");
@@ -64,20 +80,12 @@ describe("bind be", () => {
             const testBeApi = beApi as TestAggregated;
             return testBeApi.withUser.fetchB();
         });
-        const actionReducer = jest.fn();
-        const store = configureStore({
-            reducer: (state, action) => {
-                actionReducer(action.type);
-                return state;
-            },
-            preloadedState: featuresTestUtils.auth.getStateWithoutUser()
-        });
+        const {actionReducer, store} = getStore();
 
         actionReducer.mockClear();
 
-        try {
-            await store.dispatch(withUserAction()).unwrap();
-        } catch (err) {}
+        await store.dispatch(withUserAction()).unwrap().catch(() => {});
+
         expect(actionReducer).toHaveBeenCalledTimes(2);
         expect(actionReducer).toHaveBeenNthCalledWith(1, "test/with-user/pending");
         expect(actionReducer).toHaveBeenNthCalledWith(2, "test/with-user/rejected");
@@ -89,51 +97,37 @@ describe("bind be", () => {
             const testBeApi = beApi as TestAggregated;
             return testBeApi.withUser.fetchB();
         });
-        const actionReducer = jest.fn();
-        const store = configureStore({
-            reducer: (state, action) => {
-                actionReducer(action.type);
-                return state;
-            },
-            preloadedState: featuresTestUtils.auth.getInitializedState()
-        });
+        const {actionReducer, store} = getStore(true);
 
         actionReducer.mockClear();
 
         await store.dispatch(withUserAction()).unwrap().catch(() => {});
+        
         expect(actionReducer).toHaveBeenCalledTimes(2);
         expect(actionReducer).toHaveBeenNthCalledWith(1, "test/with-user/pending");
         expect(actionReducer).toHaveBeenNthCalledWith(2, "test/with-user/fulfilled");
     });
 
-    it("should create instance with user after user is supplied to store", async () => {
+    it.only("should create instance with user after user is supplied to store", async () => {
         setupBE();
         const withUserAction = createThunkWithBE_API("test/with-user", async (args, api, beApi) => {
             const testBeApi = beApi as TestAggregated;
             return testBeApi.withUser.fetchB();
         });
-        const actionReducer = jest.fn();
-        const store = configureStore({
-            reducer: (state, action) => {
-                if (action.type === "login") {
-                    return {
-                        ...state,
-                        ...featuresTestUtils.auth.getInitializedState()
-                    }
-                }
-                actionReducer(action.type);
-                return state;
-            },
-            preloadedState: featuresTestUtils.auth.getStateWithoutUser()
-        });
+        const {actionReducer, store} = getStore();
+        
         actionReducer.mockClear();
         await store.dispatch(withUserAction()).unwrap().catch(() => {});
         expect(actionReducer).toHaveBeenNthCalledWith(2, "test/with-user/rejected");
 
-        store.dispatch({type: "login"});
+        store.dispatch({ type: "login" });
 
         actionReducer.mockClear();
-        await store.dispatch(withUserAction()).unwrap().catch(() => {});
+        await store.dispatch(withUserAction()).unwrap().catch(() => { });
         expect(actionReducer).toHaveBeenNthCalledWith(2, "test/with-user/fulfilled");
-    })
+    });
+
+    it("should override api functions", () => {
+
+    });
 })

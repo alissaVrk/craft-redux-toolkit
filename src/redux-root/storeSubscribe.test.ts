@@ -28,7 +28,7 @@ describe("store subscribtion", () => {
     
     function getStoreAndSubscription(){
         const store = getStore();
-        const {subscribe, subscribeToChange} = createSubsriber();
+        const {subscribe, subscribeToStoreChange: subscribeToChange} = createSubsriber();
         return {store, subscribeToChange, startListening: subscribe}
     }
 

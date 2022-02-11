@@ -1,17 +1,7 @@
 import {  createSlice } from "@reduxjs/toolkit";
 import { StoreChangeListener, SubscribeToChange, createThunkWithBE_API } from "redux-root";
 import { v4 as uuidv4 } from 'uuid';
-import { User } from "./types";
-
-
-type AuthState = {
-    base: {
-        userId: string,
-        token: string,
-        sessionId: string
-    },
-    user: User
-}
+import { AuthState } from "./types";
 
 export const login = createThunkWithBE_API("auth/login", async ({email, pass}: {email: string, pass: string}, api, beAPI) => {
     const userInfo = await beAPI.auth.login(email, pass); 
@@ -42,11 +32,8 @@ export const authSlice = createSlice({
     }
 });
 
-export function initSlice({subscribeToStoreChange}: {subscribeToStoreChange: SubscribeToChange}){
-    return {
-        reducer: authSlice.reducer,
-        name: authSlice.name
-    }
+export function initSlice(){
+    return authSlice.reducer
 }
 
 export function subscribeToUserChanged(subscribeToStoreChange: SubscribeToChange, listener: StoreChangeListener<AuthState["base"]>) {

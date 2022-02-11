@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { BaseBackEndAPI } from "be-api";
+import { BaseBackEndAPI } from "redux-root";
 import { Workspace } from "./types";
 
 export async function fetchAll(config: AxiosRequestConfig) {

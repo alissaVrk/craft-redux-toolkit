@@ -2,6 +2,7 @@ import { AxiosInstance } from "axios";
 import type { AuthBE } from "features/auth"
 import type { WorkspaceBE } from "features/workspace"
 import type { CraftItemsBE } from "features/craft-items"
+import type { beApiOverridesSlice } from ".";
 
 export interface AggregatedBackEndAPI {
     auth: AuthBE,
@@ -16,3 +17,4 @@ export abstract class BaseBackEndAPI {
     }
 }
 
+export type BeOverridesState = ReturnType<typeof beApiOverridesSlice.reducer>

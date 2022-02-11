@@ -1,3 +1,4 @@
+import "features/initialFeature";
 import { initProviders, wrapComponentWithProviders } from "ng-connect";
 import { react2angular } from 'react2angular'
 

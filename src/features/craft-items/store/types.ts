@@ -1,3 +1,5 @@
+import type { craftItemsSlice } from "./craftItemsSlice";
+
 export enum CraftItemType {
     Product= "feature",
     Epic = "topic",
@@ -13,5 +15,7 @@ export type CraftItem = {
 }
 
 export type CraftItemUpdate = Partial<CraftItem> & {id: CraftItem["id"]};
-export type CraftItemAdd = Omit<CraftItem, "id">
-export type {CraftItemsBE } from "./craftItemsBE"
+export type CraftItemAdd = Omit<CraftItem, "id">;
+export type {CraftItemsBE } from "./craftItemsBE";
+
+export type CraftItemsState = ReturnType<typeof craftItemsSlice.reducer>;

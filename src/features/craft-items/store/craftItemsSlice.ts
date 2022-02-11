@@ -37,8 +37,5 @@ export function initSlice({ subscribeToStoreChange }: { subscribeToStoreChange: 
         }
         defer(() => dispatch(getAllItemsAsync()));
     });
-    return {
-        reducer: craftItemsSlice.reducer,
-        name: craftItemsSlice.name
-    }
+    return craftItemsSlice.reducer
 }

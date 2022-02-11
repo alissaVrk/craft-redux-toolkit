@@ -14,7 +14,7 @@ export function createSubsriber<T extends EnhancedStore>() {
             subscriptions[path].forEach(cb => cb(current, store.dispatch));
         }
     }
-    function subscribeToChange<T>(path: string, listener: StoreChangeListener<T>) {
+    function subscribeToStoreChange<T>(path: string, listener: StoreChangeListener<T>) {
         subscriptions[path] = subscriptions[path] || [];
         subscriptions[path].push(listener);
     }
@@ -36,6 +36,6 @@ export function createSubsriber<T extends EnhancedStore>() {
 
     return {
         subscribe,
-        subscribeToChange
+        subscribeToStoreChange
     };
 }
