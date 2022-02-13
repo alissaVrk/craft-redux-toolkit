@@ -1,5 +1,5 @@
 import { AnyAction, configureStore, Reducer } from '@reduxjs/toolkit';
-import { beApiOverridesSlice } from "./be-api/overridesSlice"
+import { beApiOverridesSlice } from "./be-api/beApiOverridesSlice"
 import { createSubsriber } from './storeSubscribe';
 import { RootState, SubscribeToChange } from './types';
 import { mapValues } from 'lodash';
@@ -28,7 +28,8 @@ export function createStoreAndSubscription(initialState?: any) {
     middleware: (getDefaultMiddleware) => 
       getDefaultMiddleware({
         serializableCheck: {
-          ignoredPaths: ["beOverrides"]
+          ignoredPaths: ["beOverrides"],
+          ignoredActions: ["beOverrides/overrideApis"]
         }
       })
   })
