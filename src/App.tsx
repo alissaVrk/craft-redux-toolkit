@@ -1,5 +1,5 @@
 import { Login } from 'features/auth';
-import { ItemsList } from 'features/craft-items';
+import { ItemsPage } from 'features/craft-items';
 import { WorkspaceSelect } from 'features/workspace';
 import './App.css';
 
@@ -8,7 +8,7 @@ function App() {
     <div className="App">
       <Login />
       <WorkspaceSelect />
-      <ItemsList />
+      <ItemsPage />
     </div>
   );
 }

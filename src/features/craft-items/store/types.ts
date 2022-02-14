@@ -11,7 +11,9 @@ export enum CraftItemType {
 export type CraftItem = {
     id: string,
     type: CraftItemType,
-    title: string
+    title: string,
+    shortId: string,
+    productId: string
 }
 
 export type CraftItemUpdate = Partial<CraftItem> & {id: CraftItem["id"]};

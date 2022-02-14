@@ -5,8 +5,8 @@ import type { TestUtils } from "test-utils";
 import { RootState } from "redux-root";
 
 const defaultItems = [
-    { id: "i1", title: "ttt", type: CraftItemType.Feature },
-    { id: "i2", title: "fff", type: CraftItemType.Feature }
+    { id: "i1", title: "ttt", type: CraftItemType.Feature, shortId: "sh-i1", productId: "w1" },
+    { id: "i2", title: "fff", type: CraftItemType.Feature, shortId: "sh-i2", productId: "w1" }
 ];
 
 export function getMockedItemsBE(): Record<keyof CraftItemsBE, jest.Mock>{
