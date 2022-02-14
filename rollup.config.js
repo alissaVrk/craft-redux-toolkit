@@ -4,6 +4,7 @@ import { terser } from 'rollup-plugin-terser';
 import commonjs from '@rollup/plugin-commonjs';
 import peerDepsExternal from "rollup-plugin-peer-deps-external";
 import injectProcessEnv from 'rollup-plugin-inject-process-env';
+import json from 'rollup-plugin-json';
 import svgr from '@svgr/rollup'
 
 
@@ -13,12 +14,13 @@ export default [
     {
     input: 'src/lib.ts',
     output: [
+        // {
+        //     file: packageJson.main,
+        //     format: 'cjs',
+        //     sourcemap: true,
+        //     name: 'react-lib'
+        // }, 
         {
-            file: packageJson.main,
-            format: 'cjs',
-            sourcemap: true,
-            name: 'react-lib'
-        }, {
             file: packageJson.module,
             format: 'esm',
             sourcemap: true
@@ -26,7 +28,8 @@ export default [
     ],
     plugins: [
         peerDepsExternal(),
-        resolve(),
+        resolve({browser: true, preferBuiltins: true}),
+        json(),
         svgr({template:(variables, { tpl }) => {
             return tpl`
                 ${variables.imports};
@@ -43,7 +46,8 @@ export default [
         typescript({ tsconfig: './tsconfig.json' }),
         injectProcessEnv({ 
             NODE_ENV: 'development',
+            REACT_APP_SERVER_API: 'app-pp8.craft.io'
         }),
-        terser()
+        // terser() in production only
     ]
 }]
