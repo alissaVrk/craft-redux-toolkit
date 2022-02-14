@@ -2,6 +2,7 @@ import { subscribeToWorkspaceChanged, selectors as wsSelectors } from "features/
 import { StoreType, SubscribeToChange } from "redux-root";
 import { isEmpty, throttle } from "lodash";
 import { SocketAPI, MySocket, MessageHandlers, SocketMessage } from "./types";
+import { selectors } from "features/auth";
 
 export class SocketsCommunication {
     private store;
@@ -34,6 +35,10 @@ export class SocketsCommunication {
             onmessage: (event) => {
                 try {
                     const data = JSON.parse(event.data);
+                    const sessionId = data.clientId
+                    if (sessionId === selectors.selectUserBaseInfo(this.store.getState()).sessionId) {
+                        return;
+                    }
                     this.messages.workspace.push({type: data.event, data: data.data.info});
                     this.throttled();
                 } catch(err) {

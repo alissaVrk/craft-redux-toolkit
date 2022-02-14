@@ -10,7 +10,7 @@ function subscribeToWorkspaceChangeAndFire<T>(path: string, listener: StoreChang
 
 const mockStore = {
     dispacth: () => { },
-    getState:() => ({workspaces: {}})
+    getState:() => ({workspaces: {}, auth: {base: {sessionId: "ny guid"}}})
 } as unknown as StoreType
 
 describe("Socket communication", () => {
@@ -38,6 +38,17 @@ describe("Socket communication", () => {
 
         expect(handler).toHaveBeenCalledTimes(1);
         expect(handler).toHaveBeenCalledWith([{data: data, type: "t1"}], mockStore.dispatch);
+    });
+
+    it("should not handle my own messages", () => {
+        jest.useFakeTimers();
+        const { api, handler } = connect();
+
+        const data = { a: 2 };
+        api.sendOnSocket(buildUrl("ws1"), JSON.stringify(wrapMessage("t1", data, mockStore.getState().auth.base.sessionId)));
+        jest.runAllTimers();
+
+        expect(handler).not.toHaveBeenCalled();
     });
 
     it("should throttle messages", () => {

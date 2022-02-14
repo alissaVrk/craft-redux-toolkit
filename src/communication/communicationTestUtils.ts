@@ -28,8 +28,9 @@ export function initSockets(store: StoreType, subscribeToChange: SubscribeToChan
     return socketAPI;
 }
 
-export function wrapMessage(type: string, data: any){
+export function wrapMessage(type: string, data: any, sessionId?: string){
     return {
+        clientId: sessionId || "some guid",
         event: type,
         data: {
             info: data
