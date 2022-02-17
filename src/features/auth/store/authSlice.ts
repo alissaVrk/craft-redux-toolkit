@@ -7,7 +7,7 @@ export const login = createThunkWithBE_API("auth/login", async ({email, pass}: {
     const userInfo = await beAPI.auth.login(email, pass); 
     return {
         ...userInfo,
-        sessioId: uuidv4()
+        sessioId: userInfo.sessionId || uuidv4()
     };
 });
 

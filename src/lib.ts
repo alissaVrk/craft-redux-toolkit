@@ -1,5 +1,5 @@
 import "features/initialFeature";
-import { initProviders, initStoreAndSockets, initComponents } from "ng-connect";
+import { initProviders, initStoreAndSockets, initComponents, initCommunication } from "ng-connect";
 import { createStoreAndSubscription } from "redux-root";
 
 console.log("LOADED REACT");
@@ -14,7 +14,8 @@ declare global {
 
   window.initReactApp = () => {
     initStoreAndSockets(storeAndSubscribe);
-    initProviders(document.getElementById('root'));
+    initCommunication(storeAndSubscribe.store.dispatch);
   };
 
   initComponents(storeAndSubscribe.store, window.angular);
+  initProviders(document.getElementById('root'));

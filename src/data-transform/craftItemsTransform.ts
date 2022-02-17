@@ -7,6 +7,7 @@ export type CraftItemDeprecated = {
     title: string,
     shortId: string,
     productId: string,
+    updated: string | Date,
     assignedContainer?: {
         id: string
     },
@@ -28,7 +29,9 @@ export function transformToCraftItem(item: CraftItemDeprecated): CraftItem {
         "globalStatus", 
         "importance", 
         "sprint",
-        "productId") as unknown as CraftItem;
+        "productId",
+        "updated", //toISOString
+        "actualStartDate") as unknown as CraftItem;
     to.workspaceId = item.productId;
     to.assignedContainerId = item.assignedContainer?.id;
     to.globalStatusId = item.globalStatus?.id;

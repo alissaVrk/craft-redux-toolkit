@@ -8,7 +8,7 @@ declare global {
       // add you custom properties and methods
       ngService: {
         getAllItems: (productId: string) => Promise<CraftItemDeprecated[]>,
-        getUserInfo: () => {token: string, userInfo: User},
+        getUserInfo: () => {token: string, userInfo: User, sessionId: string},
         getSelectedProductId: () => string
       }
     }
@@ -27,6 +27,7 @@ export function initStoreAndSockets({store, subscribeToChange}: {
                 console.log("UUUUUU", user)
                 return Promise.resolve({
                     token: user.token,
+                    sessionId: user.sessionId,
                     userInfo: {
                         id: user.userInfo.id,
                         email: user.userInfo.email,

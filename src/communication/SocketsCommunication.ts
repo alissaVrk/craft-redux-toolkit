@@ -54,7 +54,7 @@ export class SocketsCommunication {
         });
     }
 
-    private throttled = throttle(this.processMessages.bind(this), 3000,{
+    private throttled = throttle(this.processMessages.bind(this), 3000, {
         leading: false,
         trailing:true
     })
