@@ -2,6 +2,7 @@ import { forOwn, groupBy } from "lodash";
 import { AppDispatch } from "redux-root";
 import { SocketMessage } from "./types";
 import { localOnlyActions as itemsActions } from "features/craft-items"
+import { transformToCraftItem } from "data-transform";
 
 export enum MessageType {
     updateItem = "product:item:update",
@@ -16,11 +17,11 @@ export function handleMessages(msgs: SocketMessage[], dispatch: AppDispatch) {
 function processMessages(dispatch: AppDispatch, msgs: SocketMessage[], type: MessageType) {
     switch(type) {
         case MessageType.updateItem:
-            const updateItems = msgs.map(msg => ({id: msg.data.id, changes: msg.data}));
+            const updateItems = msgs.map(msg => ({id: msg.data.id, changes: transformToCraftItem(msg.data)}));
             dispatch(itemsActions.updateManyItems(updateItems));
             break;
         case MessageType.createItem:
-            const addItems = msgs.map(msg => msg.data);
+            const addItems = msgs.map(msg => transformToCraftItem(msg.data));
             dispatch(itemsActions.addManyItem(addItems));
             break;
         default:

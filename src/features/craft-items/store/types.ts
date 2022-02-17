@@ -13,7 +13,11 @@ export type CraftItem = {
     type: CraftItemType,
     title: string,
     shortId: string,
-    productId: string
+    workspaceId: string,
+    assignedContainerId?: string,
+    globalStatusId?: string,
+    importanceId?: string,
+    sprintId?: string
 }
 
 export type CraftItemUpdate = Partial<CraftItem> & {id: CraftItem["id"]};

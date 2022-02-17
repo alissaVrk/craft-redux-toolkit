@@ -19,3 +19,25 @@ export function ItemPanel({itemId}: {itemId: CraftItem["id"]}) {
         </div>
     )
 }
+
+
+export type CraftItemDeprecated = {
+    id: string,
+    // type: CraftItemType,
+    title: string,
+    shortId: string,
+    productId: string,
+    assignedContainer: {
+        id: string
+    },
+    custom: Array<{id: string, guid: string, value: any}>,
+    globalStatus: {
+        id: string
+    },
+    importance: {
+        id: string
+    },
+    sprint: {
+        id: string
+    }
+}

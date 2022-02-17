@@ -52,7 +52,7 @@ describe("handle socket messages", () => {
 
     it("should throw for undefined data for unsupported types", () => {
         jest.useFakeTimers();
-        const {socketsApi, store, socketUrl, itemIds} = initStuff();
+        const {socketsApi, socketUrl} = initStuff();
 
         socketsApi.sendOnSocket(socketUrl, JSON.stringify({data: {}, event: "other"}));
         jest.runAllTimers();

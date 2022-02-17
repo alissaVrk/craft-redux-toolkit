@@ -1,13 +1,13 @@
 import { initSockets } from "communication";
+import { CraftItemDeprecated, transformToCraftItem } from "data-transform";
 import { User, actions as authActions } from "features/auth";
-import { CraftItem } from "features/craft-items";
-import { beApiActions, createStoreAndSubscription, StoreType, SubscribeToChange } from "redux-root";
+import { beApiActions, StoreType, SubscribeToChange } from "redux-root";
 
 declare global {
     interface Window {
       // add you custom properties and methods
       ngService: {
-        getAllItems: (productId: string) => Promise<CraftItem[]>,
+        getAllItems: (productId: string) => Promise<CraftItemDeprecated[]>,
         getUserInfo: () => {token: string, userInfo: User},
         getSelectedProductId: () => string
       }
@@ -41,13 +41,7 @@ export function initStoreAndSockets({store, subscribeToChange}: {
         items: {
             fetchAll: async  (workspaceId: string, _userId: string) => {
                 const items = await ngService.getAllItems(workspaceId)
-                return items.map((it) => ({
-                    id: it.id,
-                    title: it.title,
-                    type: it.type,
-                    shortId: it.shortId,
-                    productId: it.productId
-                }))
+                return items.map((it) => transformToCraftItem(it))
             }
         }
     }));

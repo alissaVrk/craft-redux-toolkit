@@ -5,6 +5,9 @@ import { AggregatedBackEndAPI } from "redux-root/be-api";
 
 async function updateBE(rootState: RootState, item: CraftItemUpdate, beAPI: AggregatedBackEndAPI){
     const fullItem = selectors.selectById(rootState, item.id);
+    if (!fullItem) {
+        throw new Error("you tried to update non existing item " + item.id);
+    }
     try {
         await beAPI.items.updateItem({ ...fullItem, ...item })
     } catch (err) {
