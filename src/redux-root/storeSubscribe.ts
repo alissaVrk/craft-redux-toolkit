@@ -30,6 +30,9 @@ export function createSubsriber<T extends EnhancedStore>() {
 
     function broadcast(){
         const currentState = store.getState();
+        if (currentState === prevState) {
+            return;
+        }
         Object.keys(subscriptions).forEach(path => handlePath(path, prevState, currentState));
         prevState = currentState;
     }
