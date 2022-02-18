@@ -4,7 +4,6 @@ import { registerBackendAPI, registerSlice } from "redux-root";
 import { login } from "./authSlice";
 import { initSlice } from "./authSlice";
 
-export { subscribeToUserChanged } from "./authSlice";
 export const actions = {
     login
 }

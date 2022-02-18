@@ -1,22 +1,26 @@
-import { EnhancedStore } from "@reduxjs/toolkit";
-import { get } from "lodash";
+import { EnhancedStore, Selector} from "@reduxjs/toolkit";
 import { StoreChangeListener } from "./types";
 
 export function createSubsriber<T extends EnhancedStore>() {
-    const subscriptions: { [path: string]: Array<StoreChangeListener<any>> } = {};
     let store: T;
-    let prevState = {} as ReturnType<T["getState"]>;
+    type StoreState = ReturnType<T["getState"]>
+    type SelectorType<Result> = Selector<StoreState, Result, never[]>;
+    let prevState = {} as StoreState;
 
-    function handlePath(path: string, prevState: ReturnType<T["getState"]>, currentState: ReturnType<T["getState"]>) {
-        const prev = get(prevState, path);
-        const current = get(currentState, path);
+    const subscriptionsMap = new Map<SelectorType<any>, StoreChangeListener<any>[]>();
+
+    function handlePath(selector: SelectorType<any>, listeners:StoreChangeListener<any>[], prevState: StoreState, currentState: StoreState) {
+        const prev = selector(prevState);
+        const current = selector(currentState)
         if (prev !== current) {
-            subscriptions[path].forEach(cb => cb(current, store.dispatch));
+            listeners.forEach(cb => cb(current, store.dispatch));
         }
     }
-    function subscribeToStoreChange<T>(path: string, listener: StoreChangeListener<T>) {
-        subscriptions[path] = subscriptions[path] || [];
-        subscriptions[path].push(listener);
+    function subscribeToStoreChange<Result>(selector: SelectorType<Result>, listener: StoreChangeListener<Result>) {
+        let arr = subscriptionsMap.get(selector);
+        arr = arr || [];
+        arr.push(listener);
+        subscriptionsMap.set(selector, arr);
     }
 
     function subscribe(_store: T) {
@@ -33,7 +37,9 @@ export function createSubsriber<T extends EnhancedStore>() {
         if (currentState === prevState) {
             return;
         }
-        Object.keys(subscriptions).forEach(path => handlePath(path, prevState, currentState));
+        subscriptionsMap.forEach((listeners, selector) => 
+            handlePath(selector, listeners, prevState, currentState)
+        )
         prevState = currentState;
     }
 

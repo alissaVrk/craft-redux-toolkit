@@ -1,6 +1,6 @@
-import { subscribeToWorkspaceChanged, selectors as wsSelectors } from "features/workspace";
+import { selectors as wsSelectors } from "features/workspace";
 import { StoreType, SubscribeToChange } from "redux-root";
-import { isEmpty, throttle } from "lodash";
+import { throttle } from "lodash";
 import { SocketAPI, MySocket, MessageHandlers, SocketMessage } from "./types";
 import { selectors } from "features/auth";
 
@@ -16,11 +16,14 @@ export class SocketsCommunication {
         this.socketAPI = socketAPI;
         this.messageHandlers = handlers;
         
-        const currentWs = wsSelectors.selectSelectedWorkspace(store.getState())
-        if (!isEmpty(currentWs)) {
-            this.onWorkspaceChange(currentWs!.id);
+        const currentWs = wsSelectors.selectSelectedWorkspaceId(store.getState())
+        if (currentWs) {
+            this.onWorkspaceChange(currentWs);
         }
-        subscribeToWorkspaceChanged(subscribeToChange, (selectedWorkspace) => {
+        subscribeToChange(wsSelectors.selectSelectedWorkspaceId, (selectedWorkspace) => {
+            if (!selectedWorkspace) {
+                throw new Error("we don't know how to deal with no selected workspace");
+            }
             this.onWorkspaceChange(selectedWorkspace);
         });
     }

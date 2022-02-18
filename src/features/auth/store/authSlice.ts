@@ -1,5 +1,5 @@
 import {  createSlice } from "@reduxjs/toolkit";
-import { StoreChangeListener, SubscribeToChange, createThunkWithBE_API } from "redux-root";
+import { createThunkWithBE_API } from "redux-root";
 import { v4 as uuidv4 } from 'uuid';
 import { AuthState } from "./types";
 
@@ -34,8 +34,4 @@ export const authSlice = createSlice({
 
 export function initSlice(){
     return authSlice.reducer
-}
-
-export function subscribeToUserChanged(subscribeToStoreChange: SubscribeToChange, listener: StoreChangeListener<AuthState["base"]>) {
-    subscribeToStoreChange("auth.base", listener);
 }

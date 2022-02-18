@@ -35,7 +35,7 @@ describe("store subscribtion", () => {
     it("should call listener with initial state with subscribed before start listening ", () => {
         const {store, subscribeToChange, startListening} = getStoreAndSubscription()
         const cb = jest.fn();
-        subscribeToChange("counter1", cb);
+        subscribeToChange(state => state.counter1, cb);
         const unsubscribe = startListening(store);
 
         expect(cb).toHaveBeenCalledTimes(1);
@@ -48,7 +48,7 @@ describe("store subscribtion", () => {
         const unsubscribe = startListening(store);
 
         const cb = jest.fn();
-        subscribeToChange("counter1", cb);
+        subscribeToChange(state => state.counter1, cb);
 
         expect(cb).not.toHaveBeenCalled();
         unsubscribe();
@@ -59,7 +59,7 @@ describe("store subscribtion", () => {
         const unsubscribe = startListening(store);
 
         const cb = jest.fn();
-        subscribeToChange("counter1", cb);
+        subscribeToChange(state => state.counter1, cb);
 
         store.dispatch(counterSlice1.actions.increment());
 
@@ -73,7 +73,7 @@ describe("store subscribtion", () => {
         const unsubscribe = startListening(store);
 
         const cb = jest.fn();
-        subscribeToChange("counter2", cb);
+        subscribeToChange(state => state.counter2, cb);
 
         store.dispatch(counterSlice1.actions.increment());
 
@@ -86,7 +86,7 @@ describe("store subscribtion", () => {
         const unsubscribe = startListening(store);
 
         const cb = jest.fn();
-        subscribeToChange("counter1.value", cb);
+        subscribeToChange(state => state.counter1.value, cb);
 
         store.dispatch(counterSlice1.actions.increment());
 
@@ -100,9 +100,9 @@ describe("store subscribtion", () => {
         const unsubscribe = startListening(store);
 
         const cb1 = jest.fn();
-        subscribeToChange("counter1.value", cb1);
+        subscribeToChange(state => state.counter1.value, cb1);
         const cb2 = jest.fn();
-        subscribeToChange("counter1.value", cb2);
+        subscribeToChange(state => state.counter1.value, cb2);
 
         store.dispatch(counterSlice1.actions.increment());
 

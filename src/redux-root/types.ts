@@ -1,4 +1,4 @@
-import { Action, EnhancedStore, ThunkAction } from "@reduxjs/toolkit";
+import { Action, Selector, ThunkAction } from "@reduxjs/toolkit";
 import type { AuthState } from "features/auth";
 import type { CraftItemsState } from "features/craft-items";
 import type { WorkspacesState } from "features/workspace";
@@ -27,4 +27,4 @@ export type ThunkConfig = {
 }
 
 export type StoreChangeListener<T> = (state: T, dispatch: AppDispatch) => void;
-export type SubscribeToChange = <T>(path: string, listener: StoreChangeListener<T>) => void
+export type SubscribeToChange = <T>(selector: Selector<RootState, T, never[]>, listener: StoreChangeListener<T>) => void

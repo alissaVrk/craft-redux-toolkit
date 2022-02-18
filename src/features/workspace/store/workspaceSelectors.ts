@@ -7,7 +7,7 @@ const itemsSelector = workspacesAdapter.getSelectors<RootState>((state) => state
 const selectIsFetching = (state: RootState) => 
         state.workspaces.isItemsFetching || state.workspaces.isSelectedFetching
 
-const selectSelectedWorkspaceId = (state: RootState) => state.workspaces.selectedWorkspace;
+const selectSelectedWorkspaceId = (state: RootState) => state.workspaces?.selectedWorkspace;
 
 const selectSelectedWorkspace = createSelector(
     (state: RootState) => state,
@@ -30,5 +30,6 @@ export const selectors = {
     ...itemsSelector,
     selectSelectedWorkspace,
     selectIsFetching,
-    selectAllAndSelected
+    selectAllAndSelected,
+    selectSelectedWorkspaceId
 }

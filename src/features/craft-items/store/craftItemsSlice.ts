@@ -1,5 +1,5 @@
 import { createEntityAdapter, createSlice, EntityId, PayloadAction, Update } from "@reduxjs/toolkit";
-import { subscribeToWorkspaceChanged } from "features/workspace";
+import { selectors as wsSelectors } from "features/workspace";
 import { defer } from "lodash";
 import { RootState, SubscribeToChange } from "redux-root";
 import { getAllItemsAsync } from "./craftItemsFetchers";
@@ -53,7 +53,7 @@ export const craftItemsSlice = createSlice({
 export const selectors = craftItemsAdapter.getSelectors((state: RootState) => state.items);
 
 export function initSlice({ subscribeToStoreChange }: { subscribeToStoreChange: SubscribeToChange }) {
-    subscribeToWorkspaceChanged(subscribeToStoreChange, (state, dispatch) => {
+    subscribeToStoreChange(wsSelectors.selectSelectedWorkspaceId, (state, dispatch) => {
         if (!state) {
             return;
         }

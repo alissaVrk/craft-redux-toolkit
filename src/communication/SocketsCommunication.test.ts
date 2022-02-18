@@ -1,9 +1,10 @@
+import { Selector } from "@reduxjs/toolkit";
 import { noop } from "lodash";
 import { AppDispatch, StoreChangeListener, StoreType } from "redux-root";
 import { createSocketsAPI, wrapMessage } from "./communicationTestUtils";
 import { buildUrl, SocketsCommunication } from "./SocketsCommunication";
 
-function subscribeToWorkspaceChangeAndFire<T>(path: string, listener: StoreChangeListener<T>) {
+function subscribeToWorkspaceChangeAndFire<T>(selector: Selector<any, T, never[]>, listener: StoreChangeListener<T>) {
     //@ts-ignore
     listener("ws1", noop as AppDispatch);
 }

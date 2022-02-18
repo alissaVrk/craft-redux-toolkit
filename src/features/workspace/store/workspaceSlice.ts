@@ -1,7 +1,7 @@
 import { createEntityAdapter, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { defer } from "lodash";
-import { StoreChangeListener, SubscribeToChange } from "redux-root";
-import { subscribeToUserChanged } from "features/auth"
+import { SubscribeToChange } from "redux-root";
+import { selectors as authSelectors } from "features/auth"
 import { Workspace } from "./types";
 import { getSelectedWorkspaceAsync, getWorkspacesAsync } from "./workspaceFetchers";
 
@@ -41,7 +41,7 @@ export const workspaceSlice = createSlice({
 })
 
 export function initSlice({ subscribeToStoreChange }: { subscribeToStoreChange: SubscribeToChange }) {
-    subscribeToUserChanged(subscribeToStoreChange, (state, dispatch) => {
+    subscribeToStoreChange(authSelectors.selectUserBaseInfo, (state, dispatch) => {
         if (!state.token) {
             return;
         }
@@ -51,8 +51,4 @@ export function initSlice({ subscribeToStoreChange }: { subscribeToStoreChange: 
         });
     });
     return workspaceSlice.reducer
-}
-
-export function subscribeToWorkspaceChanged(subscribeToStoreChange: SubscribeToChange, listener: StoreChangeListener<string>) {
-    subscribeToStoreChange("workspaces.selectedWorkspace", listener);
 }
