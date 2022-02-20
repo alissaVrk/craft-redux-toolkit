@@ -15,7 +15,7 @@ export function ItemPanel({itemId}: {itemId: CraftItem["id"]}) {
         <div>
             title: <input value={title} onChange={(event) => setTitile(event.target.value)}/>
             type: {item?.type}
-            <button onClick={updateItem}>submit</button>
+            <button onClick={updateItem} style={{padding: 5, backgroundColor: "pink"}}>submit</button>
         </div>
     )
 }

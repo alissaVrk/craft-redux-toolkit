@@ -1,24 +1,20 @@
 import { useAppSelector } from "redux-root";
 import { CraftItem, selectors } from "..";
-import { ItemView } from "./ItemView";
+import { ItemView, ItemViewSettings } from "./ItemView";
 
-export function ItemsList({itemUrlBuilder, onClick}: {
-    itemUrlBuilder?: (item: CraftItem) => string,
-    onClick?: (item: CraftItem) => void
-}) {
+export function ItemsList(itemSettings: ItemViewSettings) {
     const itemIds = useAppSelector(selectors.selectIds);
     
-    return (<>
+    return (
         <ul>
             {itemIds.map(id => (
                 <ItemView 
                     key={id} 
                     itemId={id as CraftItem["id"]} 
-                    itemUrlBuilder={itemUrlBuilder}
-                    onClick={onClick}
+                    {...itemSettings}
                 />
             ))}
         </ul>
-    </>)
+    )
 
 }
