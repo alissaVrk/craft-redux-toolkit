@@ -11,7 +11,8 @@ export type CraftItemDeprecated = {
     actualStartDate?: string | Date,
     releasedDate?: string | Date,
     actualEndDate?: string | Date,
-    createdDate?: string | Date
+    createdDate?: string | Date,
+    complitedDate?: string | Date,
     assignedContainer?: {
         id: string
     },
@@ -36,7 +37,7 @@ type KeyOfByPropType<T, PropType, ExcludePropType = undefined> = Exclude<
     }[keyof T],
     undefined>;
 
-const explodedFields: Array<KeyOfByPropType<
+export const explodedFields: Array<KeyOfByPropType<
     CraftItemDeprecated,
     ({ id: string } | undefined)
 >> = [
@@ -45,7 +46,7 @@ const explodedFields: Array<KeyOfByPropType<
         "importance",
         "sprint"
     ];
-const dateFields: Array<KeyOfByPropType<
+export const dateFields: Array<KeyOfByPropType<
     CraftItemDeprecated,
     (Date | string | undefined),
     (string | undefined)
@@ -54,7 +55,8 @@ const dateFields: Array<KeyOfByPropType<
         "actualStartDate",
         "createdDate",
         "releasedDate",
-        "updated"
+        "updated",
+        "complitedDate"
     ]
 export function transformToCraftItem(item: CraftItemDeprecated): CraftItem {
     const to = omit(item,
@@ -89,7 +91,7 @@ export function transformToDeprecatedCraftItem(item: CraftItem): CraftItemDeprec
         "workspaceId") as unknown as CraftItemDeprecated;
 
     to.productId = item.workspaceId;
-    
+
     explodedFields.forEach(field => {
         to[field] = item[`${field}Id`] ? {id: item[`${field}Id`]!} : undefined
     })

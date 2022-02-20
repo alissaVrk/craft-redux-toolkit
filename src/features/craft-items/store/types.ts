@@ -22,7 +22,8 @@ export type CraftItem = {
     updated?: string,
     releasedDate?: string,
     actualEndDate?: string,
-    createdDate?: string
+    createdDate?: string,
+    complitedDate?: string
 }
 
 export type CraftItemUpdate = Partial<CraftItem> & {id: CraftItem["id"]};

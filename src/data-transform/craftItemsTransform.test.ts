@@ -1,9 +1,6 @@
 import { CraftItemType } from "features/craft-items";
-import { CraftItemDeprecated, transformToCraftItem, transformToDeprecatedCraftItem } from "./craftItemsTransform"
+import { CraftItemDeprecated, transformToCraftItem, transformToDeprecatedCraftItem, dateFields, explodedFields } from "./craftItemsTransform"
 describe("craft items transform", () => {
-    const explodedFields = ["assignedContainer", "globalStatus", "importance", "sprint"];
-    const dateFields = ["actualEndDate", "actualStartDate", "createdDate", "releasedDate", "updated"];
-
     function getBasicDeprecatedItem() {
         return {
             id: "id",
