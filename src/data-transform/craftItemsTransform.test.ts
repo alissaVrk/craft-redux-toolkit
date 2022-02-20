@@ -2,6 +2,8 @@ import { CraftItemType } from "features/craft-items";
 import { CraftItemDeprecated, transformToCraftItem, transformToDeprecatedCraftItem } from "./craftItemsTransform"
 describe("craft items transform", () => {
     const explodedFields = ["assignedContainer", "globalStatus", "importance", "sprint"];
+    const dateFields = ["actualEndDate", "actualStartDate", "createdDate", "releasedDate", "updated"];
+
     function getBasicDeprecatedItem() {
         return {
             id: "id",
@@ -27,7 +29,7 @@ describe("craft items transform", () => {
             expect(item).toEqual(getBasicItem()); 
         });
 
-        it("should transform full item", () => {
+        it("should transform item with exploded fields", () => {
             const deprecated = getBasicDeprecatedItem();
             explodedFields.forEach((field) => {
                 //@ts-ignore
@@ -42,6 +44,24 @@ describe("craft items transform", () => {
             const item = transformToCraftItem(deprecated);
             expect(item).toEqual(expectedItem);
         });
+
+        it("should transform item with dates as Date object", () => {
+            const date = new Date(2022, 1, 11, 1, 2, 3);
+            const deprecated = getBasicDeprecatedItem();
+            dateFields.forEach(field => {
+                //@ts-ignore
+                deprecated[field] = date
+            })
+
+            const expectedItem = getBasicItem();
+            dateFields.forEach(field => {
+                //@ts-ignore
+                expectedItem[field] = date.toISOString();
+            });
+
+            const item = transformToCraftItem(deprecated);
+            expect(item).toEqual(expectedItem);
+        })
     });
 
     describe("to deprecated", () => {

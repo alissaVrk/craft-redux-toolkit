@@ -8,10 +8,14 @@ export type CraftItemDeprecated = {
     shortId: string,
     productId: string,
     updated: string | Date,
+    actualStartDate?: string | Date,
+    releasedDate?: string | Date,
+    actualEndDate?: string | Date,
+    createdDate?: string | Date
     assignedContainer?: {
         id: string
     },
-    custom?: Array<{id: string, guid: string, value: any}>,
+    custom?: Array<{ id: string, guid: string, value: any }>,
     globalStatus?: {
         id: string
     },
@@ -23,25 +27,61 @@ export type CraftItemDeprecated = {
     }
 }
 
+type KeyOfByPropType<T, PropType, ExcludePropType = undefined> = Exclude<
+    {
+        [Key in keyof T]:
+        T[Key] extends PropType
+        ? T[Key] extends ExcludePropType ? never : Key
+        : never
+    }[keyof T],
+    undefined>;
+
+const explodedFields: Array<KeyOfByPropType<
+    CraftItemDeprecated,
+    ({ id: string } | undefined)
+>> = [
+        "assignedContainer",
+        "globalStatus",
+        "importance",
+        "sprint"
+    ];
+const dateFields: Array<KeyOfByPropType<
+    CraftItemDeprecated,
+    (Date | string | undefined),
+    (string | undefined)
+>> = [
+        "actualEndDate",
+        "actualStartDate",
+        "createdDate",
+        "releasedDate",
+        "updated"
+    ]
 export function transformToCraftItem(item: CraftItemDeprecated): CraftItem {
-    const to = omit(item, 
-        "assignedContainer", 
-        "globalStatus", 
-        "importance", 
+    const to = omit(item,
+        "assignedContainer",
+        "globalStatus",
+        "importance",
         "sprint",
-        "productId",
-        "updated", //toISOString
-        "actualStartDate") as unknown as CraftItem;
+        "productId") as unknown as CraftItem;
+
     to.workspaceId = item.productId;
-    to.assignedContainerId = item.assignedContainer?.id;
-    to.globalStatusId = item.globalStatus?.id;
-    to.importanceId = item.importance?.id;
-    to.sprintId = item.sprint?.id;
+
+    explodedFields.forEach(field => {
+        to[`${field}Id`] = item[field]?.id
+    })
+
+    dateFields.forEach(field => {
+        if (item[field] instanceof Date) {
+            to[field] = (item[field] as Date).toISOString();
+        } else {
+            to[field] = item[field] as string | undefined
+        }
+    })
     return to;
 }
 
 export function transformToDeprecatedCraftItem(item: CraftItem): CraftItemDeprecated {
-    const to = omit(item, 
+    const to = omit(item,
         "assignedContainerId",
         "globalStatusId",
         "importanceId",
@@ -49,10 +89,10 @@ export function transformToDeprecatedCraftItem(item: CraftItem): CraftItemDeprec
         "workspaceId") as unknown as CraftItemDeprecated;
 
     to.productId = item.workspaceId;
-    to.assignedContainer = item.assignedContainerId ? {id: item.assignedContainerId} : undefined;
-    to.globalStatus = item.globalStatusId ? {id: item.globalStatusId} : undefined;
-    to.importance = item.importanceId ? {id: item.importanceId}: undefined;
-    to.sprint = item.sprintId ? {id: item.sprintId}: undefined;
+    
+    explodedFields.forEach(field => {
+        to[field] = item[`${field}Id`] ? {id: item[`${field}Id`]!} : undefined
+    })
 
     return to;
 }

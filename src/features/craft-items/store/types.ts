@@ -18,6 +18,11 @@ export type CraftItem = {
     globalStatusId?: string,
     importanceId?: string,
     sprintId?: string
+    actualStartDate?: string,
+    updated?: string,
+    releasedDate?: string,
+    actualEndDate?: string,
+    createdDate?: string
 }
 
 export type CraftItemUpdate = Partial<CraftItem> & {id: CraftItem["id"]};
