@@ -2,8 +2,13 @@ import { simpleUpdate } from "./craftItemsActions";
 import { craftItemsSlice } from "./craftItemsSlice"
 import { CraftItemsBE } from "./craftItemsBE"
 import { registerBackendAPI, registerSlice } from "redux-root";
-import { initSlice } from "./craftItemsSlice"
-export { selectors } from "./craftItemsSlice";
+import { initSlice, selectors as entitySelectors } from "./craftItemsSlice"
+import * as customSelectors from "./craftItemsSelectors"
+export const selectors = {
+    ...entitySelectors,
+    ...customSelectors
+}
+
 
 export const actions = {
     simpleUpdate

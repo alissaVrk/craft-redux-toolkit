@@ -14,7 +14,7 @@ declare global {
 
   window.initReactApp = () => {
     initStoreAndSockets(storeAndSubscribe);
-    initCommunication(storeAndSubscribe.store.dispatch);
+    initCommunication(storeAndSubscribe.store, storeAndSubscribe.subscribeToChange);
   };
 
   initComponents(storeAndSubscribe.store, window.angular);

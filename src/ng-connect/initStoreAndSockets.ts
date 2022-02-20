@@ -9,7 +9,8 @@ declare global {
       ngService: {
         getAllItems: (productId: string) => Promise<CraftItemDeprecated[]>,
         getUserInfo: () => {token: string, userInfo: User, sessionId: string},
-        getSelectedProductId: () => string
+        getSelectedProductId: () => string,
+        updateFromReact: (type: string, data: any) => void
       }
     }
   }
