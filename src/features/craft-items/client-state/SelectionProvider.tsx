@@ -16,11 +16,11 @@ export const defaultValue = {
 export const SelectionContext = React.createContext(defaultValue);
 
 function getUseIsSelected (
-    selectedIds: React.MutableRefObject<Set<EntityId>>, 
+    initialSelectedIds: Set<EntityId>, 
     registry: React.MutableRefObject<{ [key: EntityId]: (isSelected: boolean) => void }>
 ){
     function useIsSelected(itemId: EntityId) {
-        const [sel, setSel] = useState(selectedIds.current.has(itemId));
+        const [sel, setSel] = useState(initialSelectedIds.has(itemId));
         useEffect(() => {
             if (registry.current[itemId]) {
                 throw new Error("did not implement support for multiple components per itemId");
@@ -57,7 +57,7 @@ export function SelectionProvider(props: React.PropsWithChildren<{ onSelectionCh
     const registryForSingle = useRef<{ [key: EntityId]: (isSelected: boolean) => void }>({});
     const registryForAll = useRef<Set<(selectedIds: EntityId[]) => void>>(new Set())
 
-    const selectItem = (itemId: EntityId, isSelected: boolean) => {
+    const selectItem = useCallback((itemId: EntityId, isSelected: boolean) => {
         if (isSelected) {
             selectedIds.current.add(itemId);
         } else {
@@ -66,12 +66,12 @@ export function SelectionProvider(props: React.PropsWithChildren<{ onSelectionCh
         registryForSingle.current[itemId]?.(isSelected);
         const selectedIdsArr = Array.from(selectedIds.current);
         registryForAll.current.forEach(setter => setter(selectedIdsArr));
-        props.onSelectionChanged?.({ ids: Array.from(selectedIds.current.values()), isAllSelected: false });
-    };
+        props.onSelectionChanged?.({ ids: selectedIdsArr, isAllSelected: false });
+    }, []);
 
     const value = useMemo(() => ({
         selectItem,
-        useIsSelected: getUseIsSelected(selectedIds, registryForSingle),
+        useIsSelected: getUseIsSelected(selectedIds.current, registryForSingle),
         useSelectedIds: getUseSelectedIds(Array.from(selectedIds.current), registryForAll)
     }), []);
 

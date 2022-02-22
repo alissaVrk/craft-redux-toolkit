@@ -2,6 +2,9 @@ import { createSimpleReactiveStore } from "./connectUtils/SimpleReactiveStore";
 import ReactDOM from "react-dom";
 import { StoreType } from "redux-root";
 import { Provider } from 'react-redux';
+import { itemSelectionContext } from "features/craft-items";
+import { ContextListener, LinkProvider } from "./connectUtils/contextSync";
+
 
 const store = createSimpleReactiveStore();
 
@@ -11,7 +14,14 @@ export function wrapComponentWithProviders<T extends CompType>(Comp: T, reduxSto
     return (props: React.ComponentProps<T>) => (
         <div className="rtw">
             <Provider store={reduxStore}>
-                <Comp {...props} />
+                <LinkProvider 
+                    context={itemSelectionContext.SelectionContext} 
+                    defaultContextValue={itemSelectionContext.defaultValue}
+                    path="itemSelection"
+                    simpleStore={store}
+                >
+                    <Comp {...props} />
+                </LinkProvider>
             </Provider>
         </div>
     )
@@ -24,7 +34,13 @@ export function initProviders(parentNode: HTMLElement | null) {
 
     const App = () => {
         return (
-            <></>
+            <itemSelectionContext.SelectionProvider>
+                <ContextListener 
+                    context={itemSelectionContext.SelectionContext} 
+                    path="itemSelection"
+                    simpleStore={store}
+                />
+            </itemSelectionContext.SelectionProvider>
         )
     }
 
