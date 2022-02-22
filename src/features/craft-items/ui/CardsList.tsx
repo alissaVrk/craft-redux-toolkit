@@ -8,7 +8,7 @@ export function CardsList() {
 
     return (<div style={{ height: 500 }}>
         <selctionContext.SelectionProvider>
-            <SelectionToolbar style={{ margin: 20, float: "right" }} />
+            <SelectionToolbar style={{ margin: 20, float: "right", width: 250 }} />
             <div style={{ float: "left" }}>
                 {itemIds.map(itemId => (
                     <CraftItemCard itemId={itemId} additionalStyles={{ margin: 5 }} key={itemId} />

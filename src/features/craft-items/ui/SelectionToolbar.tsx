@@ -9,7 +9,7 @@ export function SelectionToolbar(props: React.HTMLAttributes<HTMLDivElement>){
         <div {...props}>
             <h4>all selected Items</h4>
             <p>total number is {selectedIds.length}</p>
-            <p>item ids {selectedIds.join(", ")}</p>
+            <p>item ids {selectedIds.join(" ")}</p>
         </div>
     );
 }
