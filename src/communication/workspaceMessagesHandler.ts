@@ -18,12 +18,12 @@ function processMessages(dispatch: AppDispatch, msgs: SocketMessage[], type: Mes
     switch(type) {
         case MessageType.updateItem:
             const updateItems = msgs.map(msg => ({id: msg.data.id, changes: transformToCraftItem(msg.data)}));
-            dispatch(itemsActions.updateManyItems(updateItems));
+            dispatch(itemsActions.updateManyItems({items: updateItems, localOnly: true}));
             break;
-        case MessageType.createItem:
-            const addItems = msgs.map(msg => transformToCraftItem(msg.data));
-            dispatch(itemsActions.addManyItem(addItems));
-            break;
+        // case MessageType.createItem:
+        //     const addItems = msgs.map(msg => transformToCraftItem(msg.data));
+        //     dispatch(itemsActions.addManyItem(addItems));
+        //     break;
         default:
             console.log("socket message not supported", type);
     }

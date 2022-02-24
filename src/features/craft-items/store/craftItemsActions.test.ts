@@ -1,16 +1,17 @@
 import { createSelector, EntityId } from "@reduxjs/toolkit";
 import { RootState, StoreType } from "redux-root";
 import { getInitializedStore, mockBeApi } from "test-utils";
-import { selectors, actions } from ".";
+import { selectors, actions, localOnlyActions } from ".";
 import { selectChanges } from "./craftItemsSelectors";
 
 describe("async actions", () => {
+    function getSomeItemId(store: StoreType) {
+        const items = selectors.selectAll(store.getState())
+        const item = items[0];
+        return item.id;
+    }
+
     describe("simple update", () => {
-        function getSomeItemId(store: StoreType) {
-            const items = selectors.selectAll(store.getState())
-            const item = items[0];
-            return item.id;
-        }
         it("should update item title and send request to server", async () => {
             const beApiSpies = mockBeApi();
             const updateSpy = beApiSpies.items.updateItem;
@@ -48,88 +49,97 @@ describe("async actions", () => {
             expect(counter).toBe(1);
         })
 
-        describe("changes", () => {
-            beforeEach(() => {
-                mockBeApi();
-            });
+    });
 
-            function getExpectedChanges(updated: EntityId[], versionDiff: number) {
-                return {
-                    localOnly: false,
-                    added: [],
-                    removed: [],
-                    updated: updated,
-                    version: 1 + versionDiff
-                }
+    describe("changes", () => {
+        beforeEach(() => {
+            mockBeApi();
+        });
+
+        function getExpectedChanges(updated: EntityId[], versionDiff: number, localOnly?: boolean) {
+            return {
+                localOnly: !!localOnly,
+                added: [],
+                removed: [],
+                updated: updated,
+                version: 1 + versionDiff
             }
+        }
 
-            it("should update changes object accordingly", () => {
-                const store = getInitializedStore();
-                const itemId = getSomeItemId(store);
+        it("should update changes object accordingly, not local", () => {
+            const store = getInitializedStore();
+            const itemId = getSomeItemId(store);
 
-                store.dispatch(actions.simpleUpdate({ id: itemId, title: "my fency" }));
+            store.dispatch(actions.simpleUpdate({ id: itemId, title: "my fency" }));
 
-                expect(selectChanges(store.getState())).toEqual(getExpectedChanges([itemId], 1));
-            });
+            expect(selectChanges(store.getState())).toEqual(getExpectedChanges([itemId], 1));
+        });
+        
+        it("should update changes object accordingly, local", () => {
+            const store = getInitializedStore();
+            const itemId = getSomeItemId(store);
 
-            it("should update changes object even if same value passed - a new entity is created", () => {
-                const store = getInitializedStore();
-                const itemId = getSomeItemId(store);
+            store.dispatch(localOnlyActions.updateItem({ id: itemId, changes: {title: "my fency" }, localOnly: true}));
 
-                const selectItem = (state: RootState) => selectors.selectById(state, itemId)
+            expect(selectChanges(store.getState())).toEqual(getExpectedChanges([itemId], 1, true));
+        });
 
-                const prevItem = selectItem(store.getState());
-                store.dispatch(actions.simpleUpdate({ id: itemId, title: "my fency" }));
-                expect(selectChanges(store.getState())).toEqual(getExpectedChanges([itemId], 1));
-                const item1 = selectItem(store.getState());
-                expect(item1).not.toBe(prevItem);
-                
-                store.dispatch(actions.simpleUpdate({ id: itemId, title: "my fency" }));
-                expect(selectChanges(store.getState())).toEqual(getExpectedChanges([itemId], 2));
-                const item2 = selectItem(store.getState());
-                expect(item2).not.toBe(item1);
+        it("should update changes object even if same value passed - a new entity is created", () => {
+            const store = getInitializedStore();
+            const itemId = getSomeItemId(store);
 
-                //sanity
-                const item3 = selectItem(store.getState());
-                expect(item3).toBe(item2);
-            });
+            const selectItem = (state: RootState) => selectors.selectById(state, itemId)
 
-            test("example for using version to know if we skipped an update", () => {
-                const store = getInitializedStore();
-                const itemId = getSomeItemId(store);
+            const prevItem = selectItem(store.getState());
+            store.dispatch(actions.simpleUpdate({ id: itemId, title: "my fency" }));
+            expect(selectChanges(store.getState())).toEqual(getExpectedChanges([itemId], 1));
+            const item1 = selectItem(store.getState());
+            expect(item1).not.toBe(prevItem);
+            
+            store.dispatch(actions.simpleUpdate({ id: itemId, title: "my fency" }));
+            expect(selectChanges(store.getState())).toEqual(getExpectedChanges([itemId], 2));
+            const item2 = selectItem(store.getState());
+            expect(item2).not.toBe(item1);
 
-                const heavyCalculation = jest.fn().mockReturnValue(3);
-                const itemsVersion = createSelector(
-                    (state: RootState) => state.items.changes,
-                    (changes) => changes.version
-                )
+            //sanity
+            const item3 = selectItem(store.getState());
+            expect(item3).toBe(item2);
+        });
 
-                const heavySelector = createSelector(
-                    () => itemsVersion.lastResult(),
-                    (state: RootState) => itemsVersion(state),
-                    (prevVersion, currentVersion) => {
-                        if (!prevVersion || prevVersion + 1 < currentVersion) {
-                            heavyCalculation()
-                        }
+        test("example for using version to know if we skipped an update", () => {
+            const store = getInitializedStore();
+            const itemId = getSomeItemId(store);
+
+            const heavyCalculation = jest.fn().mockReturnValue(3);
+            const itemsVersion = createSelector(
+                (state: RootState) => state.items.changes,
+                (changes) => changes.version
+            )
+
+            const heavySelector = createSelector(
+                () => itemsVersion.lastResult(),
+                (state: RootState) => itemsVersion(state),
+                (prevVersion, currentVersion) => {
+                    if (!prevVersion || prevVersion + 1 < currentVersion) {
+                        heavyCalculation()
                     }
-                )
+                }
+            )
 
-                heavySelector(store.getState());
-                expect(heavyCalculation).toBeCalledTimes(1);
-                heavyCalculation.mockReset()
+            heavySelector(store.getState());
+            expect(heavyCalculation).toBeCalledTimes(1);
+            heavyCalculation.mockReset()
 
-                //version updated by one
-                store.dispatch(actions.simpleUpdate({ id: itemId, title: "my fency" }));
-                heavySelector(store.getState());
-                expect(heavyCalculation).toBeCalledTimes(0);
+            //version updated by one
+            store.dispatch(actions.simpleUpdate({ id: itemId, title: "my fency" }));
+            heavySelector(store.getState());
+            expect(heavyCalculation).toBeCalledTimes(0);
 
-                //version updated by 2
-                store.dispatch(actions.simpleUpdate({ id: itemId, title: "my fency" }));
-                store.dispatch(actions.simpleUpdate({ id: itemId, title: "my fency" }));
-                heavySelector(store.getState());
-                expect(heavyCalculation).toBeCalledTimes(1);
-            })
-        })
-
+            //version updated by 2
+            store.dispatch(actions.simpleUpdate({ id: itemId, title: "my fency" }));
+            store.dispatch(actions.simpleUpdate({ id: itemId, title: "my fency" }));
+            heavySelector(store.getState());
+            expect(heavyCalculation).toBeCalledTimes(1);
+        });
     });
 });
