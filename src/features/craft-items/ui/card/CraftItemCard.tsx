@@ -9,6 +9,7 @@ type SupportedFields = Pick<CraftItem, "title" | "importanceId">
 export function CraftItemCard(props: {
     additionalStyles?: React.CSSProperties
     itemId: EntityId,
+    groupId: EntityId
     // fieldsToShow: Array<keyof SupportedFields> ,
 }){
     const item = useAppSelector(state => selectors.selectById(state, props.itemId))
@@ -18,7 +19,7 @@ export function CraftItemCard(props: {
 
 
     function handleSelection(isSelected: boolean) {
-        selectItem(props.itemId, isSelected);
+        selectItem(props.itemId, isSelected, props.groupId);
     }
 
     if (!item) {

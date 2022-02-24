@@ -1,3 +1,4 @@
+import { EntityId } from "@reduxjs/toolkit";
 import { initSockets } from "communication";
 import { CraftItemDeprecated, transformToCraftItem } from "data-transform";
 import { User, actions as authActions } from "features/auth";
@@ -10,7 +11,11 @@ declare global {
         getAllItems: (productId: string) => Promise<CraftItemDeprecated[]>,
         getUserInfo: () => {token: string, userInfo: User, sessionId: string},
         getSelectedProductId: () => string,
-        updateFromReact: (type: string, data: any) => void
+        updateFromReact: (type: string, data: any) => void,
+        itemSelectionEmitter: {
+            emitSelectItemChange: (...args: any[]) => void,
+            onSelectItemChange: (cb: (e: any, data: {data: {ids: EntityId[], isAllSelected: boolean}}) => void) => void
+        }    
       }
     }
   }

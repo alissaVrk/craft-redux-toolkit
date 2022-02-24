@@ -4,6 +4,7 @@ import { StoreType } from "redux-root";
 import { Provider } from 'react-redux';
 import { itemSelectionContext } from "features/craft-items";
 import { ContextListener, LinkProvider } from "./connectUtils/contextSync";
+import { SelectionProviderWithNG } from "./apis/itemsSelection";
 
 
 const store = createSimpleReactiveStore();
@@ -34,13 +35,13 @@ export function initProviders(parentNode: HTMLElement | null) {
 
     const App = () => {
         return (
-            <itemSelectionContext.SelectionProvider>
+            <SelectionProviderWithNG>
                 <ContextListener 
                     context={itemSelectionContext.SelectionContext} 
                     path="itemSelection"
                     simpleStore={store}
                 />
-            </itemSelectionContext.SelectionProvider>
+            </SelectionProviderWithNG>
         )
     }
 
