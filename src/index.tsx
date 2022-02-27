@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
 import { createStoreAndSubscription } from './redux-root/store';
 import { Provider } from 'react-redux';

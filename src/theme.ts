@@ -1,4 +1,7 @@
 import { createTheme } from "@mui/material/styles";
+import { grey } from "@mui/material/colors"
+
+const black = grey[900];
 
 export const theme = createTheme({
     palette: {
@@ -10,6 +13,9 @@ export const theme = createTheme({
       },
       action: {
         hoverOpacity: 0.35
+      },
+      common: {
+          black: black
       }
     },
     components: {

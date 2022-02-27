@@ -20,15 +20,15 @@ const CheckBoxIcon = styled('div')<{ checked?: boolean }>(({ theme, checked = fa
         "&:after": {
             content: '""',
             opacity: !checked ? 0 : '1 !important',
-            color: !checked ? palette.grey[900] : `${palette.common.white} !important`,
-            transition: 'opacity .3s',
+            borderColor: !checked ? undefined : `${palette.common.white} !important`,
             border: '1px solid',
             borderTop: 'none',
             borderRight: 'none',
             width: 8,
             height: 4,
-            transform: 'rotate(-50deg)',
             marginBottom: 1,
+            transform: 'rotate(-50deg)',
+            transition: 'opacity .3s',
         },
         'input:hover ~ &': {
             borderColor: palette.primary.main
