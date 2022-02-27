@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AggregatedBackEndAPI } from ".";
+import { AggregatedBackEndAPI } from "./types";
 
 type PartialTwoLevel<T> = Partial<{[key in keyof T]: Partial<T[key]>}>
 

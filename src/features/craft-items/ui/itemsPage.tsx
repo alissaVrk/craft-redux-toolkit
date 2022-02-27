@@ -2,7 +2,7 @@ import { ItemsList } from "./ItemsList";
 import { ItemPanel } from "./itemPanel";
 import { useState } from "react";
 import type { ItemViewSettings } from "./ItemView";
-import { CraftItem } from "..";
+import { CraftItem } from "../store";
 
 export function ItemsPage({onClick, ...rest}: Omit<ItemViewSettings, "onEdit">) {
     const [editedItemId, setEditedItemId] = useState<string>();

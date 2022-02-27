@@ -13,6 +13,7 @@ module.exports = {
         }
     },
     rules: {
+        "import/no-cycle": 2,
         "@typescript-eslint/no-unused-vars": 1,
         "import/no-internal-modules": [ "error", {
             "forbid": [

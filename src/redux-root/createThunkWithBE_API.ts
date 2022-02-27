@@ -1,8 +1,7 @@
 import {createAsyncThunk, AsyncThunkPayloadCreator, AsyncThunkPayloadCreatorReturnValue, createSelector } from "@reduxjs/toolkit"
 import { RootState, ThunkConfig } from "./types";
-import { AggregatedBackEndAPI, BE_API } from "redux-root";
+import { AggregatedBackEndAPI, BE_API } from "./be-api";
 import { getAxiosInstance } from "./fetchHelpers";
-import {selectors as authSelectors} from "features/auth"
 import { isEmpty, merge } from "lodash";
 
 type AppThunkCreator<Returned, ThunkArgs = void> = AsyncThunkPayloadCreator<Returned, ThunkArgs, ThunkConfig>
@@ -13,10 +12,11 @@ type AppThunkCreatorWithBE_API<Returned, ThunkArgs = void> =
     (arg: ThunkArgs, thunkAPI: AppThunkAPI<Returned, ThunkArgs>, beAPI: AggregatedBackEndAPI) =>
         AsyncThunkPayloadCreatorReturnValue<Returned, ThunkConfig>
 
+const selectUserBaseInfo = (state: RootState)  => state.auth.base
 
 const selectBE_API = createSelector(
     (state: RootState) => {
-        return authSelectors.selectUserBaseInfo(state)
+        return selectUserBaseInfo(state)
     },
     (state: RootState) => state.beOverrides,
     (authBase, overrides) => {

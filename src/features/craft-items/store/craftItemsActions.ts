@@ -1,7 +1,7 @@
 import { createThunkWithBE_API, RootState } from "redux-root";
-import { craftItemsSlice } from "./craftItemsSlice"
-import { CraftItemUpdate, selectors } from ".";
+import { craftItemsSlice, selectors } from "./craftItemsSlice"
 import { AggregatedBackEndAPI } from "redux-root";
+import { CraftItemUpdate } from "./types";
 
 async function updateBE(rootState: RootState, item: CraftItemUpdate, beAPI: AggregatedBackEndAPI){
     const fullItem = selectors.selectById(rootState, item.id);

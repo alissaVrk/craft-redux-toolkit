@@ -1,4 +1,6 @@
-export type { AuthBE } from "./authBE";
+import type { AuthBE as BE} from "./authBE"
+
+export type AuthBE = BE;
 
 export type User = {
     email: string

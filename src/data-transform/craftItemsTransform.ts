@@ -1,4 +1,4 @@
-import { CraftItemType, CraftItem } from "features/craft-items";
+import type { CraftItemType, CraftItem } from "features/craft-items";
 import { omit } from "lodash";
 
 export type CraftItemDeprecated = {

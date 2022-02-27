@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { useAppSelector } from "redux-root";
-import { CraftItem, selectors } from "..";
+import { CraftItem, selectors } from "../store";
 
 export type ItemViewSettings = {
     itemUrlBuilder?: (item: CraftItem) => string,

@@ -1,5 +1,5 @@
 import { useAppSelector } from "redux-root";
-import { CraftItem, selectors } from "..";
+import { CraftItem, selectors } from "../store";
 import { ItemView, ItemViewSettings } from "./ItemView";
 
 export function ItemsList(itemSettings: ItemViewSettings) {

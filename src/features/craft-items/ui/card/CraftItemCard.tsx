@@ -1,5 +1,5 @@
 import { EntityId } from "@reduxjs/toolkit"
-import { selectors } from "features/craft-items"
+import { selectors } from "../../store"
 import { useSelectionContext } from "../../client-state/SelectionProvider"
 import React from "react"
 import { useAppSelector } from "redux-root"

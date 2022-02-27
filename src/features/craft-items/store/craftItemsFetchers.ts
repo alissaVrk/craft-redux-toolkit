@@ -1,5 +1,5 @@
 import { createThunkWithBE_API } from "redux-root";
-import { CraftItem } from ".";
+import { CraftItem } from "./types";
 
 export const getAllItemsAsync = createThunkWithBE_API<CraftItem[], void>("items/fetchAll", (_, api, beApi) => {
     const state = api.getState();

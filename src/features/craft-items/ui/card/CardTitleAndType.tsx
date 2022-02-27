@@ -1,5 +1,5 @@
 import { Checkbox } from "components";
-import { CraftItemType } from "features/craft-items";
+import { CraftItemType } from "../../store";
 
 export function CardTitleAndType(props: {
     title: string, 
