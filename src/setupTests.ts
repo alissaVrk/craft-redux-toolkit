@@ -29,6 +29,7 @@ jest.mock("@reduxjs/toolkit", () => {
     };
 })
 
+// eslint-disable-next-line import/first
 import toolkit from "@reduxjs/toolkit";
 
 beforeEach(() => {

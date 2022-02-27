@@ -14,11 +14,14 @@ describe("contextSync", () => {
 
         const CounterProvider = ({ children }: { children: React.ReactNode }) => {
             const [counter, setCounter] = useState(defaultValue.counter);
-            const increment = () => setCounter(counter + 1);
-            const value = useMemo(() => ({
-                counter,
-                increment
-            }), [counter]);
+
+            const value = useMemo(() => {
+                const increment = () => setCounter(counter + 1);
+                return {
+                    counter,
+                    increment
+                }
+            }, [counter]);
 
             return (<Context.Provider value={value}>
                 {children}

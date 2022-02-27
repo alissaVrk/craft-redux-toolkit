@@ -15,7 +15,7 @@ export const defaultValue = {
 
 export const SelectionContext = React.createContext(defaultValue);
 
-export function SelectionProvider(props: React.PropsWithChildren<{
+export function SelectionProvider({onSelectionChanged, registerToSelectItems, children}: React.PropsWithChildren<{
     onSelectionChanged?: (itemId: EntityId, groupId: EntityId, isItemSelected: boolean) => void
     registerToSelectItems?: (cb: (ids: EntityId[]) => void) => void
 }>) {
@@ -26,12 +26,12 @@ export function SelectionProvider(props: React.PropsWithChildren<{
     useEffect(
         //this will be different when the toolbar will be in react
         function handleSelctionChangedFromToolbar() {
-            props.registerToSelectItems?.((ids) => {
+            registerToSelectItems?.((ids) => {
                 selectedIds.current = new Set(ids);
                 registryForSingle.current.forEach((setter, itemId) => setter(selectedIds.current.has(itemId)))
                 notifySelectedIdsChanged();
             })
-        }, [])
+        }, [registerToSelectItems])
 
     const selectItem = useCallback((itemId: EntityId, isSelected: boolean, groupId: EntityId) => {
         if (isSelected) {
@@ -41,9 +41,9 @@ export function SelectionProvider(props: React.PropsWithChildren<{
         }
 
         registryForSingle.current.get(itemId)?.(isSelected);
-        props.onSelectionChanged?.(itemId, groupId, isSelected);
+        onSelectionChanged?.(itemId, groupId, isSelected);
         notifySelectedIdsChanged();
-    }, []);
+    }, [onSelectionChanged]);
 
     function notifySelectedIdsChanged() {
         const selectedIdsArr = Array.from(selectedIds.current);
@@ -54,10 +54,10 @@ export function SelectionProvider(props: React.PropsWithChildren<{
         selectItem,
         useIsSelected: getUseIsSelected(selectedIds.current, registryForSingle),
         useSelectedIds: getUseSelectedIds(Array.from(selectedIds.current), registryForAll)
-    }), []);
+    }), [selectItem]);
 
     return (<SelectionContext.Provider value={value}>
-        {props.children}
+        {children}
     </SelectionContext.Provider>)
 
 }
@@ -72,6 +72,7 @@ function getUseIsSelected(
 ) {
     function useIsSelected(itemId: EntityId) {
         const [sel, setSel] = useState(initialSelectedIds.has(itemId));
+        
         useEffect(() => {
             if (registry.current.has(itemId)) {
                 throw new Error("did not implement support for multiple components per itemId");
@@ -80,7 +81,7 @@ function getUseIsSelected(
             return () => {
                 registry.current.delete(itemId);
             }
-        }, []);
+        }, [itemId]);
         return sel;
     };
 

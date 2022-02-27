@@ -20,8 +20,8 @@ export function waitForStateChange<T>(store: StoreType, selector: (state: RootSt
             }
         });
         delay(() => {
-            unsubscribe(),
-            reject()
+            unsubscribe();
+            reject();
         }, 100);
     });
 }

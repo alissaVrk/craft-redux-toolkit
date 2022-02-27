@@ -1,4 +1,4 @@
-import { createEntityAdapter, createSlice, EntityId, PayloadAction, Update } from "@reduxjs/toolkit";
+import { createEntityAdapter, createSlice, EntityId, PayloadAction } from "@reduxjs/toolkit";
 import { selectors as wsSelectors } from "features/workspace";
 import { defer } from "lodash";
 import { RootState, SubscribeToChange } from "redux-root";

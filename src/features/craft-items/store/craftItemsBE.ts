@@ -24,6 +24,6 @@ export class CraftItemsBE extends BaseBackEndAPI {
 
     async updateItem(item: CraftItem) {
         const deprecatedItem = transformToDeprecatedCraftItem(item);
-        const result = await this.axiosInstance.put<CraftItem>(`api/${typeUrlPart[item.type]}/${item.id}`, deprecatedItem);
+        await this.axiosInstance.put<CraftItem>(`api/${typeUrlPart[item.type]}/${item.id}`, deprecatedItem);
     }
 }

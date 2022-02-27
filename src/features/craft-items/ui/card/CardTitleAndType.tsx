@@ -13,6 +13,8 @@ export function CardTitleAndType(props: {
             checked={props.isSelected} 
             onChange={e => props.onSelect?.(e.target.checked)}
         />
+        
+        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */ }
         <a className="item-title no-animate">{props.title}</a>
     </div>)
 }

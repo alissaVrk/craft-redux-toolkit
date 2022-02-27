@@ -23,8 +23,7 @@ describe("workspace slice", () => {
     
         it("should update isItemsFetching state", async () => {
             const store = createStore();
-            const mockedBeAPI = mockBeApi();
-            mockedBeAPI.workspace.fetchAll;
+            mockBeApi();
 
             expect(store.getState().workspaces.isItemsFetching).toBe(false);
             const promise = store.dispatch(wsFetchActions.getWorkspacesAsync()).unwrap();

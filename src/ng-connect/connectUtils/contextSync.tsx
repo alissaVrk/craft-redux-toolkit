@@ -12,7 +12,7 @@ export function ContextListener<T>({ context, path, simpleStore }: ContextProps<
 
     useEffect(() => {
         simpleStore.setValue(path, value);
-    }, [value]);
+    }, [value, simpleStore, path]);
 
     return null
 }

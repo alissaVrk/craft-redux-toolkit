@@ -1,10 +1,10 @@
 import { EntityId } from "@reduxjs/toolkit"
-import { CraftItem, selectors } from "features/craft-items"
+import { selectors } from "features/craft-items"
 import { useSelectionContext } from "features/craft-items/client-state/SelectionProvider"
 import React from "react"
 import { useAppSelector } from "redux-root"
 import { CardTitleAndType } from "./CardTitleAndType"
-type SupportedFields = Pick<CraftItem, "title" | "importanceId">
+// type SupportedFields = Pick<CraftItem, "title" | "importanceId">
 
 export function CraftItemCard(props: {
     additionalStyles?: React.CSSProperties
