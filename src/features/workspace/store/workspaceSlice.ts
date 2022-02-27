@@ -1,4 +1,4 @@
-import { createEntityAdapter, createSlice, EntityId, PayloadAction } from "@reduxjs/toolkit";
+import { createEntityAdapter, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { defer } from "lodash";
 import { SubscribeToChange } from "redux-root";
 import { selectors as authSelectors } from "features/auth"
