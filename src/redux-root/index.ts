@@ -7,3 +7,4 @@ export { registerBackendAPI } from "./be-api/aggregator";
 export { registerSlice, createStoreAndSubscription, createStore } from "./store"
 export const beApiActions = beApiOverridesSlice.actions;
 export * from "./be-api/types"
+export { BE_API } from "./be-api"

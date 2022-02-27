@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import { createStoreAndSubscription } from './redux-root/store';
+import { createStoreAndSubscription } from './redux-root';
 import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 import { initSockets } from 'communication';

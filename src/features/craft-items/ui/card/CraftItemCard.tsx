@@ -1,6 +1,6 @@
 import { EntityId } from "@reduxjs/toolkit"
 import { selectors } from "features/craft-items"
-import { useSelectionContext } from "features/craft-items/client-state/SelectionProvider"
+import { useSelectionContext } from "../../client-state/SelectionProvider"
 import React from "react"
 import { useAppSelector } from "redux-root"
 import { CardTitleAndType } from "./CardTitleAndType"

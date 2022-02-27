@@ -1,6 +1,6 @@
 import { actions as authActions } from "features/auth";
 import { waitForStateChange, mockBeApi } from "test-utils";
-import { createStore } from "redux-root/store";
+import { createStore } from "redux-root";
 
 describe("fetch items", () => {
     it("should fetch items after login", async () => {

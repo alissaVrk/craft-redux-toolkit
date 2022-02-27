@@ -1,6 +1,6 @@
 import {createAsyncThunk, AsyncThunkPayloadCreator, AsyncThunkPayloadCreatorReturnValue, createSelector } from "@reduxjs/toolkit"
 import { RootState, ThunkConfig } from "./types";
-import { AggregatedBackEndAPI, BE_API } from "redux-root/be-api";
+import { AggregatedBackEndAPI, BE_API } from "redux-root";
 import { getAxiosInstance } from "./fetchHelpers";
 import {selectors as authSelectors} from "features/auth"
 import { isEmpty, merge } from "lodash";

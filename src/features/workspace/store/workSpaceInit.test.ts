@@ -1,4 +1,4 @@
-import { createStore } from "redux-root/store";
+import { createStore } from "redux-root";
 import * as auth from "features/auth";
 import * as wsFetchActions from "./workspaceFetchers"
 import {waitForStateChange,  mockBeApi} from "test-utils"
