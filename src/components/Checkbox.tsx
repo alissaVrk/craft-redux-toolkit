@@ -12,6 +12,7 @@ const CheckBoxIcon = styled('div')<{ checked?: boolean }>(({ theme, checked = fa
         transition: "border .3s,background .3s",
         display: "inline-flex",
         alignItems: "center",
+        justifyContent: "center",
         '&[font-size="small"]': {
             width: 15,
             height: 15
@@ -27,8 +28,7 @@ const CheckBoxIcon = styled('div')<{ checked?: boolean }>(({ theme, checked = fa
             width: 8,
             height: 4,
             transform: 'rotate(-50deg)',
-            marginBottom: 2,
-            marginLeft: 1
+            marginBottom: 1,
         },
         'input:hover ~ &': {
             borderColor: palette.primary.main
@@ -41,9 +41,6 @@ const CheckBoxIcon = styled('div')<{ checked?: boolean }>(({ theme, checked = fa
 
 export function Checkbox(props: CheckboxProps) {
     return <MuiCheckbox
-        disableFocusRipple
-        disableRipple
-        disableTouchRipple
         icon={<CheckBoxIcon />}
         checkedIcon={<CheckBoxIcon checked />}
         size="small"
