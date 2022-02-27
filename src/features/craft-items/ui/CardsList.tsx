@@ -11,7 +11,7 @@ export function CardsList() {
             <SelectionToolbar style={{ margin: 20, float: "right", width: 250 }} />
             <div style={{ float: "left" }}>
                 {itemIds.map(itemId => (
-                    <CraftItemCard itemId={itemId} additionalStyles={{ margin: 5 }} key={itemId} />
+                    <CraftItemCard itemId={itemId} groupId="1" additionalStyles={{ margin: 5 }} key={itemId} />
                 ))}
             </div>
         </selctionContext.SelectionProvider>

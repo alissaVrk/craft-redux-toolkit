@@ -1,7 +1,6 @@
 import { createTheme, ThemeProvider } from '@mui/material';
-import { Checkbox } from 'components/Checkbox';
 import { Login } from 'features/auth';
-import { ItemsPage, CardsList } from 'features/craft-items';
+import { CardsList } from 'features/craft-items';
 import { WorkspaceSelect } from 'features/workspace';
 import './App.css';
 
@@ -30,21 +29,15 @@ const theme = createTheme({
 });
 
 function App() {
-  return <div> 
+  return (
     <ThemeProvider theme={theme}>
-      <Checkbox />
+      <div className="App">
+        <Login />
+        <WorkspaceSelect />
+        <CardsList />
+      </div>
     </ThemeProvider>
-  </div>
+  );
 }
-
-// function App() {
-//   return (
-//     <div className="App">
-//       <Login />
-//       <WorkspaceSelect />
-//       <CardsList />
-//     </div>
-//   );
-// }
 
 export default App;
