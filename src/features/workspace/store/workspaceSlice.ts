@@ -1,4 +1,4 @@
-import { createEntityAdapter, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createEntityAdapter, createSlice, EntityId, PayloadAction } from "@reduxjs/toolkit";
 import { defer } from "lodash";
 import { SubscribeToChange } from "redux-root";
 import { selectors as authSelectors } from "features/auth"
@@ -15,10 +15,10 @@ export const workspaceSlice = createSlice({
         selectedWorkspace: null as null | string
     }),
     reducers: {
-        selectWorkspace: (state, action: PayloadAction<Workspace>) => {
+        selectWorkspace: (state, action: PayloadAction<string>) => {
             return {
                 ...state,
-                selectedWorkspace: action.payload.id
+                selectedWorkspace: action.payload
             }
         }
     },

@@ -13,7 +13,7 @@ describe("actions", () => {
 
             expect(selected?.id).toBe("w1");
 
-            await store.dispatch(wsAPI.actions.selectWorkspace({id: "w2"} as Workspace));
+            await store.dispatch(wsAPI.actions.selectWorkspace("w2"));
 
             const newSelected = wsAPI.selectors.selectSelectedWorkspace(store.getState());
 

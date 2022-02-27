@@ -1,31 +1,34 @@
 import { useAppDispatch, useAppSelector } from "redux-root";
 import { selectors, actions } from "../store";
-import { Listbox } from '@headlessui/react'
-import { Workspace } from "../store/types";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 export function WorkspaceSelect() {
     const { items, isFetching, selectedWorkspace } = useAppSelector(selectors.selectAllAndSelected);
     const dispatch = useAppDispatch();
 
-    function selectItem(item?: Workspace){
-        if (!item) {
+    function selectItem(itemId?: string) {
+        if (!itemId) {
             throw new Error("you can't select no item")
         }
-        dispatch(actions.selectWorkspace(item));
+        dispatch(actions.selectWorkspace(itemId));
     }
 
     if (isFetching) {
         return <div style={{ width: 300 }}>Loading....</div>
     }
     return (
-        <Listbox value={selectedWorkspace} onChange={selectItem} as="div" style={{ width: 300 }}>
-            <Listbox.Button style={{ width: "100%" }}>{selectedWorkspace?.name || "select"}</Listbox.Button>
-            <Listbox.Options>
+        <FormControl sx={{ minWidth: 150}} variant="standard" size="small">
+            <InputLabel id="select_ws">Select Workspace</InputLabel>
+
+            <Select
+                value={selectedWorkspace?.id}
+                onChange={e => selectItem(e.target.value)}
+                labelId="select_ws"
+            >
                 {items.map(ws => (
-                    <Listbox.Option key={ws.id} value={ws}>
-                        {ws.name}
-                    </Listbox.Option>
+                    <MenuItem value={ws.id} key={ws.id}>{ws.name}</MenuItem>
                 ))}
-            </Listbox.Options>
-        </Listbox>)
+            </Select>
+        </FormControl>
+    )
 }
