@@ -2,7 +2,7 @@
   "name": "alissa-todo-react-query",
   "version": "0.3.0",
   "private": true,
-  "proxy": "https://app-pp3.craft.io",
+  "proxy": "https://app-pp8.craft.io",
   "main": "lib/cjs/index.js",
   "module": "lib/esm/index.js",
   "files": [
