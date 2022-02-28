@@ -12,7 +12,7 @@ export const theme = createTheme({
         500: "#acacac"
       },
       action: {
-        hoverOpacity: 0.35
+        hoverOpacity: .35
       },
       common: {
           black: black

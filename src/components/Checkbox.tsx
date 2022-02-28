@@ -20,7 +20,7 @@ const CheckBoxIcon = styled('div')<{ checked?: boolean }>(({ theme, checked = fa
         "&:after": {
             content: '""',
             opacity: !checked ? 0 : '1 !important',
-            borderColor: !checked ? undefined : `${palette.common.white} !important`,
+            borderColor: !checked ? palette.common.black : `${palette.common.white} !important`,
             border: '1px solid',
             borderTop: 'none',
             borderRight: 'none',
@@ -34,7 +34,7 @@ const CheckBoxIcon = styled('div')<{ checked?: boolean }>(({ theme, checked = fa
             borderColor: palette.primary.main
         },
         'input:hover ~ &:after': {
-            opacity: palette.action.hoverOpacity
+            opacity: .35
         }
     }
 });
