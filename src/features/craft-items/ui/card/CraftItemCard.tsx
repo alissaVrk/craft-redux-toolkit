@@ -31,5 +31,6 @@ export function CraftItemCard(props: {
             type={item.type} 
             isSelected={selected} 
             onSelect={handleSelection} />
+        <p> status {item.globalStatusId}</p>
     </div>)
 }

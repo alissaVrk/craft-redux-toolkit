@@ -1,7 +1,7 @@
 import { workspaceHandleSocketMessage } from "communication";
 import { StoreType, SubscribeToChange } from "redux-root";
 import { selectors as itemsSelectors } from "features/craft-items"
-import { transformToDeprecatedCraftItem } from "data-transform";
+import { CraftItemDeprecated, transformToDeprecatedCraftItem } from "data-transform";
 
 declare global {
     interface Window {
@@ -12,10 +12,17 @@ declare global {
 
 export function initCommunication(store: StoreType, subscribeToStoreChange: SubscribeToChange) {
     window.sendUpdateToReact = (type: string, data: any) => {
-        workspaceHandleSocketMessage([{
-            type,
-            data
-        }], store.dispatch);
+      let msgs = [{
+        type,
+        data
+    }]
+      if (type === "ng.items.sync") {
+        msgs = data.updatedItems.map((item: CraftItemDeprecated) => ({
+          type: "product:item:update",
+          data: item
+        }));
+      }
+        workspaceHandleSocketMessage(msgs, store.dispatch);
     }
 
     subscribeToStoreChange(itemsSelectors.selectChanges, (changes, dispatch) => {
